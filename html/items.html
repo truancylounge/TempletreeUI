@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>TempletreeBillingSystem</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="../bootstrap/dist/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="../bootstrap/dist/css/bootstrap-theme.min.css">
+    <script src="../js/lib/jquery-2.1.4.min.js"></script>
+    <script src="../js/lib/angular-1.4.6.min.js"></script>
+    
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="../bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../js/items.js"></script>
+    
+    <link href="../css/dashboard.css" rel="stylesheet">  
+    <link href="../css/fileupload.css" rel="stylesheet">
+  </head>
+  <body> 
+      <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Templetree</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="dashboard.html">Dashboard</a></li>
+              <li><a href="#">Settings</a></li>
+              <li><a href="#">Profile</a></li>
+              <li><a href="#">Help</a></li>
+              <li><a href="sign_in.html">Login</a></li>
+            </ul>
+            <form class="navbar-form navbar-right">
+              <input type="text" class="form-control" placeholder="Search...">
+            </form>
+          </div>
+        </div>
+      </nav>
+
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+              <li><a href="dashboard.html">Overview <span class="sr-only">(current)</span></a></li>
+              <li><a href="#">Reports</a></li>
+              <li><a href="#">Analytics</a></li>
+              <li><a href="#">Export</a></li>
+            </ul>
+            <ul class="nav nav-sidebar">
+              <li class="active"><a href="items.html">Items</a></li>
+              <li><a href="invoices.html">Invoices</a></li> 
+            </ul>
+          </div>
+          <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="item" ng-controller="ItemController as itemController">
+            <h1 class="page-header">Items</h1>
+            <p class="lead">Listed below are all the Items that exist. You can also add new Items.</p>
+            <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target=".addItems">Add Items</button>
+
+            <form enctype="multipart/form-data" action="http://localhost:8080/Templetree/rest/fileservice/upload/itemlist" method="POST">
+              <input type="file" class="btn btn-lg btn-primary" name="uploadFile" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>  
+              <button>Submit</button>
+            </form>    
+
+            <div style="padding:20px 0px 60px 0px">
+              <span class="col-md-1" style="font-weight:bold">Search</span>
+              <span class="col-md-3">
+              <input type="text" class="form-control" ng-model="searchKeyword"/>
+              </span>
+            </div>
+
+            <div class="modal fade addItems" role="dialog" aria-labelledby="itemModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add Items</h4>
+                  </div>
+                  <div class="modal-body">
+                    <form role="form">
+                      <div class="form-group">
+                        <label>Barcode:</label>
+                        <input type="text" class="form-control" id="barcode" ng-model="barcode">
+                      </div>
+                      <div class="form-group">
+                        <label>Category:</label>
+                        <input type="text" class="form-control" id="cateogry" ng-model="category">
+                      </div>
+                      <div class="form-group">
+                        <label>ItemName:</label>
+                        <input type="text" class="form-control" id="itemName" ng-model="itemName">
+                      </div>
+                      <div class="form-group">
+                        <label>SalesPrice:</label>
+                        <input type="text" class="form-control" id="salesPrice" ng-model="salesPrice">
+                      </div>
+                      <div class="form-group">
+                        <label>PurchasePrice:</label>
+                        <input type="text" class="form-control" id="purchasePrice" ng-model="purchasePrice">
+                      </div>
+                      <div class="form-group">
+                        <label>Quantity:</label>
+                        <input type="text" class="form-control" id="quantity" ng-model="quantity">
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" data-dismiss="modal">Close</button>
+                    <button type="Submit" data-dismiss="modal" class="btn btn-primary" ng-click="addItems()">Save changes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Barcode</th>
+                    <th>Category</th>
+                    <th>ItemName</th>
+                    <th>SalesPrice</th>
+                    <th>PurchasePrice</th>
+                    <th>Quantity</th>
+                  </tr>                  
+                </thead>
+                <tbody ng-repeat="i in items | filter: searchKeyword" >                  
+                  <tr><td>{{$index + 1}}</td><td>{{i.barcode}}</td><td>{{i.cateogry}}</td><td>{{i.itemName}}</td><td>{{i.salesPrice}}</td><td>{{i.purchasePrice}}</td><td>{{i.quantity}}</td></tr>              
+                </tbody>
+              </table>
+            </div>  
+          </div>
+        </div>  
+      </div>
+  </body>
+</html>
