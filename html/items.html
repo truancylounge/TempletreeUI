@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="../bootstrap/dist/css/bootstrap-theme.min.css">
     <script src="../js/lib/jquery-2.1.4.min.js"></script>
     <script src="../js/lib/angular-1.4.6.min.js"></script>
+    <script src="../js/lib/ui-bootstrap-tpls-0.13.4.min.js"></script>
     
     <!-- Latest compiled and minified JavaScript -->
     <script src="../bootstrap/dist/js/bootstrap.min.js"></script>
@@ -66,7 +67,7 @@
           <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="item" ng-controller="ItemController as itemController">
             <h1 class="page-header">Items</h1>
             <p class="lead">Listed below are all the Items that exist. You can also add new Items.</p>
-            <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target=".addItems">Add Items</button>
+            <button type="button" class="btn btn-lg btn-primary" ng-click="open()">Add Items</button>
 
             <form enctype="multipart/form-data" action="http://localhost:8080/Templetree/rest/fileservice/upload/itemlist" method="POST">
               <input type="file" class="btn btn-lg btn-primary" name="uploadFile" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>  
@@ -80,12 +81,10 @@
               </span>
             </div>
 
-            <div class="modal fade addItems" role="dialog" aria-labelledby="itemModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
+            <!-- Modal InvoiceItems start -->
+            <script type="text/ng-template" id="addItemsModal.html">
                   <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Add Items</h4>
+                      <h3 class="modal-title">Add Items</h3>
                   </div>
                   <div class="modal-body">
                     <form role="form">
@@ -114,14 +113,15 @@
                         <input type="text" class="form-control" id="quantity" ng-model="quantity">
                       </div>
                     </form>
-                  </div>
+                  </div>       
                   <div class="modal-footer">
-                    <button type="button" data-dismiss="modal">Close</button>
-                    <button type="Submit" data-dismiss="modal" class="btn btn-primary" ng-click="addItems()">Save changes</button>
-                  </div>
-                </div>
-              </div>
-            </div>
+                    <button type="button" ng-click="cancel()">Close</button>
+                    <button type="Submit" class="btn btn-primary" ng-click="addItems()">Save changes</button>
+                  </div>           
+            </script>
+
+            <!-- Modal InvoiceItems End -->
+
             <div class="table-responsive">
               <table class="table table-striped">
                 <thead>
@@ -136,10 +136,14 @@
                   </tr>                  
                 </thead>
                 <tbody ng-repeat="i in items | filter: searchKeyword" >                  
-                  <tr><td>{{$index + 1}}</td><td>{{i.barcode}}</td><td>{{i.cateogry}}</td><td>{{i.itemName}}</td><td>{{i.salesPrice}}</td><td>{{i.purchasePrice}}</td><td>{{i.quantity}}</td></tr>              
+                  <tr><td>{{$index + 1}}</td><td>{{i.barcode}}</td><td>{{i.category}}</td><td>{{i.itemName}}</td><td>{{i.salesPrice}}</td><td>{{i.purchasePrice}}</td><td>{{i.quantity}}</td></tr>              
                 </tbody>
               </table>
-            </div>  
+            </div> 
+            <div>
+              <button type="button" ng-click="revertItems()">Revert</button>
+              <button type="Submit" class="btn btn-primary" ng-click="updateItems()">Save changes</button>
+            </div>            
           </div>
         </div>  
       </div>
