@@ -81,7 +81,7 @@
               </span>
             </div>
 
-            <!-- Modal InvoiceItems start -->
+            <!-- Modal Items start -->
             <script type="text/ng-template" id="addItemsModal.html">
                   <div class="modal-header">
                       <h3 class="modal-title">Add Items</h3>
@@ -120,7 +120,41 @@
                   </div>           
             </script>
 
-            <!-- Modal InvoiceItems End -->
+            <!-- Modal Items End -->
+
+
+            <!-- Modal Item Edit start -->
+            <script type="text/ng-template" id="editItemsModal.html">
+                  <div class="modal-header">
+                      <h3 class="modal-title">Edit Item Details</h3>
+                  </div>
+                  <div class="modal-body">
+                    <form role="form">
+                      <div class="form-group">
+                        <label>ItemName:</label>
+                        <input type="text" class="form-control" id="itemName" ng-model="itemName">
+                      </div>
+                      <div class="form-group">
+                        <label>Quantity:</label>
+                        <input type="text" class="form-control" id="quantity" ng-model="quantity">
+                      </div>
+                      <div class="form-group">
+                        <label>SalesPrice:</label>
+                        <input type="text" class="form-control" id="salesPrice" ng-model="salesPrice">
+                      </div>
+                      <div class="form-group">
+                        <label>PurchasePrice:</label>
+                        <input type="text" class="form-control" id="purchasePrice" ng-model="purchasePrice">
+                      </div>
+                    </form>
+                  </div>       
+                  <div class="modal-footer">
+                    <button type="button" ng-click="cancel()">Close</button>
+                    <button type="Submit" class="btn btn-primary" ng-click="editItem()">Save changes</button>
+                  </div>           
+            </script>
+
+            <!-- Modal Item Edit Stop -->
 
             <div class="table-responsive">
               <table class="table table-striped">
@@ -133,10 +167,26 @@
                     <th>SalesPrice</th>
                     <th>PurchasePrice</th>
                     <th>Quantity</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
                   </tr>                  
                 </thead>
                 <tbody ng-repeat="i in items | filter: searchKeyword" >                  
-                  <tr><td>{{$index + 1}}</td><td>{{i.barcode}}</td><td>{{i.category}}</td><td>{{i.itemName}}</td><td>{{i.salesPrice}}</td><td>{{i.purchasePrice}}</td><td>{{i.quantity}}</td></tr>              
+                  <tr>
+                    <td>{{$index + 1}}</td>
+                    <td>{{i.barcode}}</td>
+                    <td>{{i.category}}</td>
+                    <td>{{i.itemName}}</td>
+                    <td>{{i.salesPrice}}</td>
+                    <td>{{i.purchasePrice}}</td>
+                    <td>{{i.quantity}}</td>
+                    <td>
+                      <p><button class="btn btn-primary btn-xs" ng-click="editItemOpen(i)"><span class="glyphicon glyphicon-pencil"></span></button></p>
+                    </td>
+                    <td>
+                      <p><button class="btn btn-danger btn-xs " ng-click="deleteItem(i)"><span class="glyphicon glyphicon-trash"></span></button></p>
+                    </td>
+                  </tr>              
                 </tbody>
               </table>
             </div> 
