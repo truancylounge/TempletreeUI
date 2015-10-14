@@ -15,6 +15,12 @@
     <script src="../js/lib/jquery-2.1.4.min.js"></script>
     <script src="../js/lib/angular-1.4.6.min.js"></script>
     <script src="../js/lib/ui-bootstrap-tpls-0.13.4.min.js"></script>
+
+    <!-- File upload resources-->
+    <link rel="stylesheet" href="../css/fileinput.min.css"/>
+    <script src="../js/lib/plugins/canvas-to-blob.min.js" type="text/javascript"></script>
+    <script src="../js/lib/fileinput.min.js"></script>
+
     
     <!-- Latest compiled and minified JavaScript -->
     <script src="../bootstrap/dist/js/bootstrap.min.js"></script>
@@ -66,18 +72,40 @@
           </div>
           <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="invoice" ng-controller="InvoiceController as invoiceController">
             <h1 class="page-header">Invoices</h1>
-            <p class="lead">Listed below are all the Invoices that exist. You can also upload new Invoices.</p>        
-            <form enctype="multipart/form-data" action="http://localhost:8080/Templetree/rest/fileservice/upload/invoices" method="POST">
-              <input type="file" class="btn btn-lg btn-primary" name="uploadFile" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>  
-              <button>Submit</button>
-            </form>    
 
+            <p class="lead">You can also upload new Invoices using file upload</p>        
+            
+            <form enctype="multipart/form-data" action="http://localhost:8080/Templetree/rest/fileservice/upload/invoices" method="POST">
+              <!--input type="file" name="uploadFile"/>
+              <button>Submit</button-->
+              <label class="control-label">Select File</label>
+              <input id="input-1a" type="file"  name="uploadFile" class="file" data-show-preview="false" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+            </form>
+            <p class="lead">Listed below are all Invoices that exist</p>
             <div style="padding:20px 0px 60px 0px">
-              <span class="col-md-1" style="font-weight:bold">Search</span>
-              <span class="col-md-3">
-              <input type="text" class="form-control" ng-model="searchKeyword"/>
-              </span>
+                <span class="col-md-1" style="font-weight:bold">Search</span>
+                <span class="col-md-3">
+                <input type="text" class="form-control" ng-model="searchKeyword"/>
+                </span>
             </div>
+                   
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>InvoiceName</th>
+                    <th>SubTotal</th>
+                    <th>Shipping</th>
+                    <th>Packing</th>
+                    <th>GrandTotal</th>
+                  </tr>                  
+                </thead>
+                <tbody>                  
+                  <tr ng-repeat="i in invoices | filter: searchKeyword" ng-click="open(i)" ><td>{{$index + 1}}</td><td>{{i.invoiceName}}</td><td>{{i.subTotal}}</td><td>{{i.shipping}}</td><td>{{i.packing}}</td><td>{{i.grandTotal}}</td></tr>              
+                </tbody>
+              </table>
+            </div>  
 
             <!-- Modal InvoiceItems start -->
             <script type="text/ng-template" id="invoiceItemsModal.html">
@@ -108,27 +136,7 @@
                       <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
                   </div>
             </script>
-
-            <!-- Modal InvoiceItems End -->
-
-            <div class="table-responsive">
-              <table class="table table-hover">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>InvoiceName</th>
-                    <th>SubTotal</th>
-                    <th>Shipping</th>
-                    <th>Packing</th>
-                    <th>GrandTotal</th>
-                  </tr>                  
-                </thead>
-                <tbody>                  
-                  <tr ng-repeat="i in invoices | filter: searchKeyword" ng-click="open(i)" ><td>{{$index + 1}}</td><td>{{i.invoiceName}}</td><td>{{i.subTotal}}</td><td>{{i.shipping}}</td><td>{{i.packing}}</td><td>{{i.grandTotal}}</td></tr>              
-                </tbody>
-              </table>
-            </div>  
-          </div>
+          <!-- Modal InvoiceItems End -->
         </div>  
       </div>
   </body>
