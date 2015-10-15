@@ -27,7 +27,7 @@
     <script src="../js/invoices.js"></script>
     
     <link href="../css/dashboard.css" rel="stylesheet">  
-    <link href="../css/fileupload.css" rel="stylesheet">
+    <link href="../css/fileupload.css" rel="stylesheet">   
   </head>
   <body> 
       <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -75,12 +75,9 @@
 
             <p class="lead">You can also upload new Invoices using file upload</p>        
             
-            <form enctype="multipart/form-data" action="http://localhost:8080/Templetree/rest/fileservice/upload/invoices" method="POST">
-              <!--input type="file" name="uploadFile"/>
-              <button>Submit</button-->
-              <label class="control-label">Select File</label>
-              <input id="input-1a" type="file"  name="uploadFile" class="file" data-show-preview="false" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-            </form>
+            <label class="control-label">Select File</label>
+            <input type="file" id="invoiceUpload" name="uploadFile" class="file" data-show-preview="false" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+          
             <p class="lead">Listed below are all Invoices that exist</p>
             <div style="padding:20px 0px 60px 0px">
                 <span class="col-md-1" style="font-weight:bold">Search</span>
@@ -137,6 +134,16 @@
                   </div>
             </script>
           <!-- Modal InvoiceItems End -->
+          <script>
+              $("#invoiceUpload").fileinput({
+                  uploadUrl: "http://localhost:8080/Templetree/rest/fileservice/upload/invoices", // server upload action
+                  uploadAsync: true,
+                  maxFileCount: 1
+              });
+            $('#invoiceUpload').on('fileuploaded', function(event, data, previewId, index) {
+                window.location.replace("invoices.html");
+            });
+          </script>
         </div>  
       </div>
   </body>

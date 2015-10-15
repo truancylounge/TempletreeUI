@@ -76,13 +76,8 @@
             <button type="button" class="btn btn-lg btn-primary" ng-click="open()">Add Items</button>
 
             <h3>Upload New Items</h1>
-            <form enctype="multipart/form-data" action="http://localhost:8080/Templetree/rest/fileservice/upload/itemlist" method="POST">
-              <!--input type="file" name="uploadFile"/>
-              <button>Submit</button-->
-              <label class="control-label">Select File</label>
-              <input id="input-1a" type="file"  name="uploadFile" class="file" data-show-preview="false" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-            </form>
-
+            <label class="control-label">Select File</label>
+            <input type="file" id="itemsUpload" name="uploadFile" class="file" data-show-preview="false" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
             <h3>List of Existing Items</h1>
             <div style="padding:20px 0px 60px 0px">
               <span class="col-md-1" style="font-weight:bold">Search</span>
@@ -203,6 +198,16 @@
             </script>
 
             <!-- Modal Item Edit Stop -->
+            <script>
+              $("#itemsUpload").fileinput({
+                  uploadUrl: "http://localhost:8080/Templetree/rest/fileservice/upload/itemlist", // server upload action
+                  uploadAsync: true,
+                  maxFileCount: 1
+              });
+            $('#itemsUpload').on('fileuploaded', function(event, data, previewId, index) {
+                window.location.replace("items.html");
+            });
+          </script>
 
 
           </div>
