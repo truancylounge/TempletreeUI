@@ -24,6 +24,8 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="../bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="../js/items.js"></script>
+
+    <script src="../resource/config.js"></script>
     
     <link href="../css/dashboard.css" rel="stylesheet">  
     <link href="../css/fileupload.css" rel="stylesheet">
@@ -42,7 +44,7 @@
           </div>
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="dashboard.html">Dashboard</a></li>
+              <li><a href="../dashboard.html">Dashboard</a></li>
               <li><a href="#">Settings</a></li>
               <li><a href="#">Profile</a></li>
               <li><a href="#">Help</a></li>
@@ -59,7 +61,7 @@
         <div class="row">
           <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
-              <li><a href="dashboard.html">Overview <span class="sr-only">(current)</span></a></li>
+              <li><a href="../dashboard.html">Overview <span class="sr-only">(current)</span></a></li>
               <li><a href="#">Reports</a></li>
               <li><a href="#">Analytics</a></li>
               <li><a href="#">Export</a></li>
@@ -201,7 +203,7 @@
             <!-- Modal Item Edit Stop -->
             <script>
               $("#itemsUpload").fileinput({
-                  uploadUrl: "http://localhost:8080/Templetree/rest/fileservice/upload/itemlist", // server upload action
+                  uploadUrl: uiProperties.itemlistUploadUrl, // server upload action
                   uploadAsync: true,
                   maxFileCount: 1
               });

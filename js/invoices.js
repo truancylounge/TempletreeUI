@@ -1,7 +1,6 @@
 var app = angular.module('invoice', ['ui.bootstrap']);
 app.controller('InvoiceController', ['$scope', '$http','$modal', function($scope, $http, $modal) {
 
-
     $http.get('http://localhost:8080/Templetree/rest/invoices/').success(function(data) {
       $scope.invoices = data;
     });
