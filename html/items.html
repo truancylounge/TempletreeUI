@@ -71,6 +71,9 @@
               <li><a href="invoices.html">Invoices</a></li> 
               <li><a href="billing.html">Billing</a></li>
             </ul>
+            <ul class="nav nav-sidebar">
+              <li><a href="customers.html">Customers</a></li>            
+            </ul>
           </div>
           <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="item" ng-controller="ItemController as itemController">
             
@@ -85,7 +88,7 @@
             <div style="padding:20px 0px 60px 0px">
               <span class="col-md-1" style="font-weight:bold">Search</span>
               <span class="col-md-3">
-              <input type="text" class="form-control" ng-model="searchKeyword"/>
+                <input type="text" class="form-control" ng-model="searchKeyword"/>
               </span>
               
               <button type="button" class="btn btn-danger" ng-click="revertItems()">Revert</button>
@@ -127,7 +130,7 @@
               </table>
             </div>        
 
-            <!-- Modal Items start -->
+            <!-- Modal Add Items start -->
             <script type="text/ng-template" id="addItemsModal.html">
                   <div class="modal-header">
                       <h3 class="modal-title">Add Items</h3>
@@ -166,7 +169,7 @@
                   </div>           
             </script>
 
-            <!-- Modal Items End -->
+            <!-- Modal Add Items End -->
 
 
             <!-- Modal Item Edit start -->

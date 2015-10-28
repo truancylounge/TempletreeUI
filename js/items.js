@@ -30,7 +30,7 @@ app.controller('ItemController', ['$scope', '$http', '$modal', function($scope, 
 
     $scope.revertItems = function() {
       console.log("Reverting items.");
-      $http.get($scope.uiProperties.getItemlist).success(function(data) {
+      $http.get($scope.uiProperties.itemlistUrl).success(function(data) {
           $scope.items = data;
       });
     };
@@ -43,10 +43,10 @@ app.controller('ItemController', ['$scope', '$http', '$modal', function($scope, 
         templateUrl: 'addItemsModal.html',
         controller: 'ItemModalController',
         resolve: {
-        items: function () {
-          return $scope.items;
+          items: function () {
+            return $scope.items;
+          }
         }
-      }
       });
     };
 
