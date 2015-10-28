@@ -1,0 +1,5 @@
+
+{
+	"itemlistUrl": "http://localhost:8080/Templetree/rest/items/",
+	"invoiceUrl":"http://localhost:8080/Templetree/rest/invoices/"
+}

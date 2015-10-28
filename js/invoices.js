@@ -1,12 +1,20 @@
 var app = angular.module('invoice', ['ui.bootstrap']);
 app.controller('InvoiceController', ['$scope', '$http','$modal', function($scope, $http, $modal) {
 
-    $http.get('http://localhost:8080/Templetree/rest/invoices/').success(function(data) {
-      $scope.invoices = data;
+  var initialize = $http.get('../resources/config.json');
+
+    initialize.success(function(data) {
+      $scope.uiProperties = data;
+      $http.get($scope.uiProperties.invoiceUrl)
+        .success(function(data) {
+          $scope.invoices = data;
+        })
+        .error(function(data, status, headers, config) {
+          alert( "failure message: " + JSON.stringify({data: data}));
+        });
     });
 
     $scope.open = function (i) {
-      //alert("I am an alert box!");
       console.log(i.invoiceName);
 
       var modalInstance = $modal.open({

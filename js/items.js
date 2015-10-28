@@ -1,21 +1,25 @@
 var app = angular.module('item', ['ui.bootstrap'])
 app.controller('ItemController', ['$scope', '$http', '$modal', function($scope, $http, $modal) {
-    var resGet = $http.get('http://localhost:8080/Templetree/rest/items/');
 
-    resGet.success(function(data) {
-      $scope.items = data;
+    var initialize = $http.get('../resources/config.json');
+
+    initialize.success(function(data) {
+      $scope.uiProperties = data;
+      $http.get($scope.uiProperties.itemlistUrl)
+        .success(function(data) {
+          $scope.items = data;
+        })
+        .error(function(data, status, headers, config) {
+          alert( "failure message: " + JSON.stringify({data: data}));
+        });
     });
-
-    resGet.error(function(data, status, headers, config) {
-        alert( "failure message: " + JSON.stringify({data: data}));
-    });  
 
     $scope.updateItems = function() {
       console.log("Updating items.");
-      var res = $http.post('http://localhost:8080/Templetree/rest/items/', $scope.items);
+      var res = $http.post($scope.uiProperties.itemlistUrl, $scope.items);
       res.success(function(data, status, headers, config) {
         // On Success retrieve all items
-        $http.get('http://localhost:8080/Templetree/rest/items/').success(function(data) {
+        $http.get($scope.uiProperties.itemlistUrl).success(function(data) {
           $scope.items = data;
         });
       });
@@ -26,7 +30,7 @@ app.controller('ItemController', ['$scope', '$http', '$modal', function($scope, 
 
     $scope.revertItems = function() {
       console.log("Reverting items.");
-      $http.get('http://localhost:8080/Templetree/rest/items/').success(function(data) {
+      $http.get($scope.uiProperties.getItemlist).success(function(data) {
           $scope.items = data;
       });
     };
