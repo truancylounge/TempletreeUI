@@ -19,6 +19,7 @@
     
     <!-- Latest compiled and minified JavaScript -->
     <script src="../bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../js/billingInvoices.js"></script>
     
     <link href="../css/dashboard.css" rel="stylesheet">  
   </head>
@@ -60,16 +61,16 @@
             </ul>
             <ul class="nav nav-sidebar">
               <li><a href="items.html">Items</a></li>
-              <li><a href="invoices.html">Invoices</a></li> 
-              <li class="active"><a href="billing.html">Billing</a></li>
+              <li><a href="invoices.html">Invoices</a></li>
+              <li><a href="customers.html">Customers</a></li>
             </ul>
             <ul class="nav nav-sidebar">
-              <li><a href="customers.html">Customers</a></li>            
+              <li class="active"><a href="billing.html">Billing</a></li>            
             </ul>
           </div>
-          <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="" ng-controller="">
+          <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="billing" ng-controller="BillingController">
             <h1 class="page-header">Billing</h1>
-            <p class="lead">Listed below are all Customer Invoices that exist</p>
+            <p class="lead">Listed below are all Billing Invoices that exist</p>
             <div style="padding:20px 0px 60px 0px">
                 <span class="col-md-1" style="font-weight:bold">Search</span>
                 <span class="col-md-3">
@@ -81,19 +82,48 @@
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>InvoiceName</th>
-                    <th>SubTotal</th>
-                    <th>Shipping</th>
-                    <th>Packing</th>
-                    <th>GrandTotal</th>
+                    <th>TotalAmount</th>
+                    <th>Cash</th>
+                    <th>Credit</th>
+                    <th>CreatedDate</th>
+                    <th>UpdatedDate</th>
                   </tr>                  
                 </thead>
                 <tbody>                  
-                  <tr ng-repeat="i in invoices | filter: searchKeyword" ng-click="open(i)" ><td>{{$index + 1}}</td><td>{{i.invoiceName}}</td><td>{{i.subTotal}}</td><td>{{i.shipping}}</td><td>{{i.packing}}</td><td>{{i.grandTotal}}</td></tr>              
+                  <tr ng-repeat="i in billingInvoices | filter: searchKeyword" ng-click="open(i)" ><td>{{$index + 1}}</td><td>{{i.totalAmount}}</td><td>{{i.cash}}</td><td>{{i.credit}}</td><td>{{i.createdDate}}</td><td>{{i.updatedDate}}</td></tr>              
                 </tbody>
               </table>
-            </div>  
-
+            </div>
+            <!-- Modal BillingInvoiceItems start -->
+            <script type="text/ng-template" id="billingInvoicesItemsModal.html">
+                  <div class="modal-header">
+                      <h3 class="modal-title">Billing Invoice Items</h3>
+                  </div>
+                  <div class="modal-body">
+                      <div class="table-responsive">
+                        <table class="table table-striped">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>ItemName</th>
+                              <th>Barcode</th>
+                              <th>Quantity</th>
+                              <th>PurchasePrice</th>
+                              <th>Total</th>
+                            </tr>                  
+                          </thead>
+                          <tbody>                  
+                            <tr ng-repeat="i in billingInvoicesItems"><td>{{$index + 1}}</td><td>{{i.itemName}}</td><td>{{i.barcode}}</td><td>{{i.quantity}}</td><td>{{i.purchasePrice}}</td><td>{{i.total}}</td></tr>              
+                          </tbody>
+                        </table>
+                      </div> 
+                  </div>
+                  
+                  <div class="modal-footer">
+                      <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+                  </div>
+            </script>
+          <!-- Modal BillingInvoiceItems End -->
           </div>
       </div>
     </div>          
