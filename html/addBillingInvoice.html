@@ -65,29 +65,23 @@
               <li><a href="customers.html">Customers</a></li>
             </ul>
             <ul class="nav nav-sidebar">
-              <li class="active"><a href="billing.html">Billing</a></li>  
-              <li><a href="addBillingInvoice.html">Add Billing Invoice</a></li>           
+              <li><a href="billing.html">Billing</a></li>  
+              <li class="active"><a href="addBillingInvoice.html">Add Billing Invoice</a></li>           
             </ul>
           </div>
           <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="billing" ng-controller="BillingController">
-            <h1 class="page-header">Billing</h1>
-            <p class="lead">Listed below are all Billing Invoices that exist</p>
-            <div style="padding:20px 0px 60px 0px">
-                <span class="col-md-1" style="font-weight:bold">Search</span>
-                <span class="col-md-3">
-                <input type="text" class="form-control" ng-model="searchKeyword"/>
-                </span>
-            </div>
+            <h1 class="page-header">New Billing Invoice</h1>
+            <button type="button" class="btn btn-lg btn-primary" ng-click="addNewItemOpen()">Add New Item</button>            
             <div class="table-responsive">
               <table class="table table-hover">
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>TotalAmount</th>
-                    <th>Cash</th>
-                    <th>Credit</th>
-                    <th>CreatedDate</th>
-                    <th>UpdatedDate</th>
+                    <th>Barcode</th>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>MRP</th>
+                    <th>Total</th>
                   </tr>                  
                 </thead>
                 <tbody>                  
@@ -95,10 +89,10 @@
                 </tbody>
               </table>
             </div>
-            <!-- Modal BillingInvoiceItems start -->
-            <script type="text/ng-template" id="billingInvoicesItemsModal.html">
+            <!-- Modal AddItems start -->
+            <script type="text/ng-template" id="addItemsModal.html">
                   <div class="modal-header">
-                      <h3 class="modal-title">Billing Invoice Items</h3>
+                      <h3 class="modal-title">Add Items</h3>
                   </div>
                   <div class="modal-body">
                       <div class="table-responsive">
@@ -124,7 +118,7 @@
                       <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
                   </div>
             </script>
-          <!-- Modal BillingInvoiceItems End -->
+          <!-- Modal AddItems End -->
           </div>
       </div>
     </div>          
