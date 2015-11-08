@@ -71,8 +71,9 @@
           </div>
           <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="addBilling" ng-controller="AddBillingController">
             <h1 class="page-header">Billing Invoice</h1>
-            <button type="button" class="btn btn-lg btn-primary" ng-click="addNewItemOpen()">Add New Item</button>  
-            <button type="button" class="btn btn-default btn-lg" ng-click="selectPaymentTypeOpen()">Select Payment Type</button>          
+            <button type="button" class="btn btn-lg btn-default" ng-click="addNewItemOpen()">Add New Item</button>  
+            <button type="button" class="btn btn-primary btn-lg" ng-click="selectPaymentTypeOpen()">Select Payment Type</button>
+            <button type="button" class="btn btn-default btn-lg" ng-click="addCustomerDetailsOpen()">Add Customer Details</button>         
             <div class="table-responsive">
               <table class="table table-hover">
                 <thead>
@@ -91,12 +92,12 @@
                 </tbody>
               </table>
             </div>
-            
+
             <div style="font-size:24px; display:inline-block" class="col-md-4 main" id="results">Credit: {{billingInvoice.credit}}</div>
             <div style="font-size:24px; display:inline-block" class="col-md-4  main" id="results">Cash: {{billingInvoice.cash}}</div>
             <div style="font-size:24px; display:inline-block" class="col-md-4 main" id="results">Total: {{billingInvoice.totalAmount}}</div>
             
-            <button type="button" class="btn btn-lg btn-primary col-md-offset-8 main" ng-click="createBillingInvoice()">Bill Invoice</button>
+            <button type="button" class="btn btn-lg btn-primary col-md-offset-8" ng-click="createBillingInvoice()">Bill Invoice</button>
             <!-- Modal AddItems start -->
             <script type="text/ng-template" id="addItemsBillingInvoicesModal.html">
                   <div class="modal-header">
@@ -173,6 +174,44 @@
 
             </script>
           <!-- Select Payment Type Modal End -->
+
+          <!-- Add Customer Details Modal start -->
+            <script type="text/ng-template" id="addCustomerDetailsModal.html">
+                  <div class="modal-header">
+                      <h3 class="modal-title">Add Customer Details</h3>
+                  </div>
+                  <div class="modal-body">
+                    <div class="dropdown">
+                      <button class="btn btn-default dropdown-toggle" type="button" id="customersMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        Customer: {{selectedCustomer.name}}
+                        <span class="caret"></span>
+                      </button>
+                      <ul class="dropdown-menu scrollable-menu" aria-labelledby="customersMenu">
+                        <li ng-repeat="customer in customers"><a ng-click="dropdownCustomerSelected(customer)">{{customer.name}}</a></li>
+                      </ul>
+                    </div>
+
+                    <form role="form">
+                      <div class="form-group">
+                        <label>Customer Name:</label>
+                        <span type="text" class=" form-control" id="name" ng-model="name">{{selectedCustomer.name}}</span>
+                      </div>
+                      <div class="form-group">
+                        <label>Customer Email:</label>
+                        <span type="text" class=" form-control" id="email" ng-model="email">{{selectedCustomer.email}}</span>
+                      </div>
+                      <div class="form-group">
+                        <label>Telephone Number</label>
+                        <span type="text" class=" form-control" id="telephoneNo" ng-model="purchasePrice">{{selectedCustomer.telephoneNo}}</span>
+                      </div>
+                    </form>
+                  </div>                      
+                  <div class="modal-footer">
+                    <button type="button" ng-click="cancel()">Close</button>
+                    <button type="Submit" class="btn btn-primary" ng-click="addCustomer()">Add Customer Details</button>
+                  </div>       
+            </script>
+          <!-- Add Customer Info Modal End -->
 
           </div>
       </div>

@@ -6,9 +6,8 @@ app.controller('AddBillingController', ['$scope', '$http','$modal', function($sc
     initialize.success(function(data) {
       console.log("Entering Intialize");
       $scope.uiProperties = data;
-      $scope.billingInvoicesItemsList = [];
       $scope.billingInvoice = {};
-      $scope.billingInvoice.billingInvoicesItemsList = $scope.billingInvoicesItemsList;
+      $scope.billingInvoice.billingInvoicesItemsList = [];
       $scope.billingInvoice.totalAmount;
 
       $http.get($scope.uiProperties.itemlistUrl)
@@ -18,6 +17,15 @@ app.controller('AddBillingController', ['$scope', '$http','$modal', function($sc
         .error(function(data, status, headers, config) {
           alert( "failure message: " + JSON.stringify({data: data}));
         });
+
+      $http.get($scope.uiProperties.customerlistUrl)
+        .success(function(data) {
+          $scope.customers = data;
+        })
+        .error(function(data, status, headers, config) {
+          alert( "failure message: " + JSON.stringify({data: data}));
+        });
+
     });
 
     $scope.createBillingInvoice = function() {
@@ -33,22 +41,13 @@ app.controller('AddBillingController', ['$scope', '$http','$modal', function($sc
         templateUrl: 'addItemsBillingInvoicesModal.html',
         controller: 'AddItemsBillingInvoicesModalController',
         resolve: {
-          billingInvoicesItemsList: function () {
-            return $scope.billingInvoicesItemsList;
+          billingInvoice: function() {
+            return $scope.billingInvoice;
           },
           items: function() {
             return $scope.items;
-          },
-          totalAmount: function() {
-            return $scope.billingInvoice.totalAmount;
-          }
+          }  
         }
-      });
-
-      modalInstance.result.then(function (totalAmount) {
-        $scope.billingInvoice.totalAmount = totalAmount;
-      }, function (totalAmount) {
-        console.log('Modal dismissed at: ' + new Date());
       });      
     };
 
@@ -66,12 +65,28 @@ app.controller('AddBillingController', ['$scope', '$http','$modal', function($sc
       });
     };
 
+    $scope.addCustomerDetailsOpen = function() {
+      console.log("Entering Add Customer Details Modal.");
+
+      var modalInstance = $modal.open({
+        templateUrl: 'addCustomerDetailsModal.html',
+        controller: 'AddCustomerDetailsModalController',
+        resolve: {
+          billingInvoice: function() {
+            return $scope.billingInvoice;
+          },
+          customers: function() {
+            return $scope.customers;
+          }                  
+        }
+      });
+    };
 }]);
 
-app.controller('AddItemsBillingInvoicesModalController', function($scope, $modalInstance, billingInvoicesItemsList, items, totalAmount) {
-  $scope.billingInvoicesItemsList = billingInvoicesItemsList;
+app.controller('AddItemsBillingInvoicesModalController', function($scope, $modalInstance, billingInvoice, items) {
+  $scope.billingInvoice = billingInvoice;
+  $scope.billingInvoice.totalAmount = billingInvoice.totalAmount || 0;
   $scope.items = items;
-  $scope.totalAmount = totalAmount || 0;
 
   $scope.cancel = function() {
     $modalInstance.dismiss('cancel');
@@ -83,11 +98,9 @@ app.controller('AddItemsBillingInvoicesModalController', function($scope, $modal
 
   $scope.addItems = function() {
     console.log("Adding new Item: " + $scope.selectedItem.itemName);
-    $scope.totalAmount = $scope.totalAmount + ($scope.selectedItem.purchasePrice * $scope.quantity);
-    console.log("TotalAmount: " + $scope.totalAmount);
-    
-    $scope.billingInvoicesItemsList.push({"barcode": $scope.selectedItem.barcode, "itemName" : $scope.selectedItem.itemName, "purchasePrice" : $scope.selectedItem.purchasePrice, "quantity" : $scope.quantity, "total" : $scope.selectedItem.purchasePrice * $scope.quantity});
-    $modalInstance.close($scope.totalAmount);
+    $scope.billingInvoice.totalAmount = $scope.billingInvoice.totalAmount + ($scope.selectedItem.purchasePrice * $scope.quantity);
+    $scope.billingInvoice.billingInvoicesItemsList.push({"barcode": $scope.selectedItem.barcode, "itemName" : $scope.selectedItem.itemName, "purchasePrice" : $scope.selectedItem.purchasePrice, "quantity" : $scope.quantity, "total" : $scope.selectedItem.purchasePrice * $scope.quantity});
+    $modalInstance.close('save');
   };
 });
 
@@ -103,6 +116,25 @@ app.controller('SelectPaymentTypeModalController', function($scope, $modalInstan
     $scope.billingInvoice.credit = $scope.credit;
 
     $modalInstance.close($scope.totalAmount);
+  };
+});
+
+app.controller('AddCustomerDetailsModalController', function($scope, $modalInstance, billingInvoice, customers) {
+  $scope.billingInvoice = billingInvoice;
+  $scope.customers = customers;
+
+  $scope.cancel = function() {
+    $modalInstance.dismiss('cancel');
+  };
+
+  $scope.dropdownCustomerSelected = function(customer) {
+    $scope.selectedCustomer = customer;
+  };
+
+  $scope.addCustomer = function() {
+    console.log("Adding new Customer: " + $scope.selectedCustomer.name);
+    $scope.billingInvoice.customer = $scope.selectedCustomer;
+    $modalInstance.close('save');
   };
 });
 

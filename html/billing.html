@@ -86,12 +86,13 @@
                     <th>TotalAmount</th>
                     <th>Cash</th>
                     <th>Credit</th>
+                    <th>CustomerName</th>
                     <th>CreatedDate</th>
                     <th>UpdatedDate</th>
                   </tr>                  
                 </thead>
                 <tbody>                  
-                  <tr ng-repeat="i in billingInvoices | filter: searchKeyword" ng-click="open(i)" ><td>{{$index + 1}}</td><td>{{i.totalAmount}}</td><td>{{i.cash}}</td><td>{{i.credit}}</td><td>{{i.createdDate}}</td><td>{{i.updatedDate}}</td></tr>              
+                  <tr ng-repeat="i in billingInvoices | filter: searchKeyword" ng-click="open(i)" ><td>{{$index + 1}}</td><td>{{i.totalAmount}}</td><td>{{i.cash}}</td><td>{{i.credit}}</td><td>{{i.customer.name}}</td><td>{{i.createdDate}}</td><td>{{i.updatedDate}}</td></tr>              
                 </tbody>
               </table>
             </div>
