@@ -19,7 +19,7 @@
     
     <!-- Latest compiled and minified JavaScript -->
     <script src="../bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="../js/billingInvoices.js"></script>
+    <script src="../js/addBillingInvoices.js"></script>
     
     <link href="../css/dashboard.css" rel="stylesheet">  
   </head>
@@ -69,9 +69,10 @@
               <li class="active"><a href="addBillingInvoice.html">Add Billing Invoice</a></li>           
             </ul>
           </div>
-          <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="billing" ng-controller="BillingController">
-            <h1 class="page-header">New Billing Invoice</h1>
-            <button type="button" class="btn btn-lg btn-primary" ng-click="addNewItemOpen()">Add New Item</button>            
+          <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="addBilling" ng-controller="AddBillingController">
+            <h1 class="page-header">Billing Invoice</h1>
+            <button type="button" class="btn btn-lg btn-primary" ng-click="addNewItemOpen()">Add New Item</button>  
+            <button type="button" class="btn btn-default btn-lg" ng-click="selectPaymentTypeOpen()">Select Payment Type</button>          
             <div class="table-responsive">
               <table class="table table-hover">
                 <thead>
@@ -85,40 +86,94 @@
                   </tr>                  
                 </thead>
                 <tbody>                  
-                  <tr ng-repeat="i in billingInvoices | filter: searchKeyword" ng-click="open(i)" ><td>{{$index + 1}}</td><td>{{i.totalAmount}}</td><td>{{i.cash}}</td><td>{{i.credit}}</td><td>{{i.createdDate}}</td><td>{{i.updatedDate}}</td></tr>              
+                  <tr ng-repeat="i in billingInvoice.billingInvoicesItemsList | filter: searchKeyword"><td>{{$index + 1}}</td><td>{{i.barcode}}</td><td>{{i.itemName}}</td><td>{{i.quantity}}</td><td>{{i.purchasePrice}}</td><td>{{i.total}}</td>
+                  </tr>                          
                 </tbody>
               </table>
             </div>
+            
+            <div style="font-size:24px; display:inline-block" class="col-md-4 main" id="results">Credit: {{billingInvoice.credit}}</div>
+            <div style="font-size:24px; display:inline-block" class="col-md-4  main" id="results">Cash: {{billingInvoice.cash}}</div>
+            <div style="font-size:24px; display:inline-block" class="col-md-4 main" id="results">Total: {{billingInvoice.totalAmount}}</div>
+            
+            <button type="button" class="btn btn-lg btn-primary col-md-offset-8 main" ng-click="createBillingInvoice()">Bill Invoice</button>
             <!-- Modal AddItems start -->
-            <script type="text/ng-template" id="addItemsModal.html">
+            <script type="text/ng-template" id="addItemsBillingInvoicesModal.html">
                   <div class="modal-header">
-                      <h3 class="modal-title">Add Items</h3>
+                      <h3 class="modal-title">Add Item</h3>
                   </div>
+
                   <div class="modal-body">
-                      <div class="table-responsive">
-                        <table class="table table-striped">
-                          <thead>
-                            <tr>
-                              <th>#</th>
-                              <th>ItemName</th>
-                              <th>Barcode</th>
-                              <th>Quantity</th>
-                              <th>PurchasePrice</th>
-                              <th>Total</th>
-                            </tr>                  
-                          </thead>
-                          <tbody>                  
-                            <tr ng-repeat="i in billingInvoicesItems"><td>{{$index + 1}}</td><td>{{i.itemName}}</td><td>{{i.barcode}}</td><td>{{i.quantity}}</td><td>{{i.purchasePrice}}</td><td>{{i.total}}</td></tr>              
-                          </tbody>
-                        </table>
-                      </div> 
-                  </div>
-                  
+
+                    <div class="dropdown">
+                      <button class="btn btn-default dropdown-toggle" type="button" id="itemsMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        Item: {{selectedItem.itemName}}
+                        <span class="caret"></span>
+                      </button>
+                      <ul class="dropdown-menu scrollable-menu" aria-labelledby="itemsMenu">
+                        <li ng-repeat="item in items"><a ng-click="dropdownItemSelected(item)">{{item.itemName}}</a></li>
+                      </ul>
+                    </div>
+
+                    <form role="form">
+                      <div class="form-group">
+                        <label>Barcode:</label>
+                        <span type="text" class=" form-control" id="barcode" ng-model="barcode">{{selectedItem.barcode}}</span>
+                      </div>
+                      <div class="form-group">
+                        <label>ItemName:</label>
+                        <span type="text" class=" form-control" id="itemName" ng-model="itemName">{{selectedItem.itemName}}</span>
+                      </div>
+                      <div class="form-group">
+                        <label>MRP:</label>
+                        <span type="text" class=" form-control" id="purchasePrice" ng-model="purchasePrice">{{selectedItem.purchasePrice}}</span>
+                      </div>
+                      <div class="form-group">
+                        <label>Quantity:</label>
+                        <input type="text" class="form-control" id="quantity" ng-model="quantity">
+                      </div>
+                      <div class="form-group">
+                        <label>Total:</label>
+                        <span class="form-control" id="total">{{selectedItem.purchasePrice * quantity}}</span>
+                      </div>
+                    </form>
+                  </div>       
+
                   <div class="modal-footer">
-                      <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-                  </div>
+                    <button type="button" ng-click="cancel()">Close</button>
+                    <button type="Submit" class="btn btn-primary" ng-click="addItems()">Add Item</button>
+                  </div>           
+
             </script>
           <!-- Modal AddItems End -->
+
+            <!-- Select Payment Type Modal start -->
+            <script type="text/ng-template" id="selectPaymentTypeModal.html">
+                  <div class="modal-header">
+                      <h3 class="modal-title">How would you like to Pay?</h3>
+                  </div>
+                  <h4 class="modal-title">Total Amount: {{billingInvoice.totalAmount}}</h4>
+                  <div class="modal-body">
+                    <form role="form">
+                      <div class="form-group">
+                        <label>Cash:</label>
+                        <input type="text" class="form-control" id="cash" ng-model="cash">
+                      </div>
+                      <div class="form-group">
+                        <label>Credit:</label>
+                        <input type="text" class="form-control" id="credit" ng-model="credit">
+                      </div>
+                    </form>
+                  </div>       
+
+                  <div class="modal-footer">
+                    <button type="button" ng-click="cancel()">Close</button>
+                    <button type="Submit" class="btn btn-primary" ng-click="addPaymentType()">Add Payment Type</button>
+                  </div>           
+
+            </script>
+          <!-- Select Payment Type Modal End -->
+
           </div>
       </div>
     </div>          
