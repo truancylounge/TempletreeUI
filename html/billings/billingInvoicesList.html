@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>TempletreeBillingSystem</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="../../bootstrap/dist/css/bootstrap.min.css">
+    
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="../../bootstrap/dist/css/bootstrap-theme.min.css">
+    <script src="../../js/lib/jquery-2.1.4.min.js"></script>
+    <script src="../../js/lib/angular-1.4.6.min.js"></script>
+    <script src="../../js/lib/ui-bootstrap-tpls-0.13.4.min.js"></script>
+    
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="../../bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../../js/billings/billingList.js"></script>
+
+    <script src="../../resources/config.js"></script>
+    
+    <link href="../../css/dashboard.css" rel="stylesheet">  
+  </head>
+  <body> 
+      <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Templetree</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Items <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="../items/addItems.html">AddItems</a></li>
+                  <li><a href="../items/uploadItems.html">UploadNewItems</a></li>
+                  <li><a href="../items/itemList.html">ItemList</a></li>
+                </ul>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Invoices <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="../invoices/uploadInvoices.html">UploadNewInvoices</a></li>
+                  <li><a href="../invoices/invoicesList.html">InvoiceList</a></li>
+                </ul>
+              </li>  
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">BillingSystem <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="addBillingInvoice.html">NewBill</a></li>
+                  <li><a href="billingInvoicesList.html">BillingInvoices</a></li>
+                </ul>
+              </li>                                                                                                       
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Customers <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="../customers/addCustomers.html">AddCustomers</a></li>
+                  <li><a href="../customers/customerList.html">CustomerList</a></li>
+                </ul>
+              </li>              
+              
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="../../dashboard.html">Dashboard</a></li>
+              <li><a href="#">Settings</a></li>
+              <li><a href="#">Profile</a></li>
+              <li><a href="#">Help</a></li>
+              <li><a href="../sign_in.html">Login</a></li>
+            </ul>
+            <form class="navbar-form navbar-right">
+              <input type="text" class="form-control" placeholder="Search...">
+            </form>
+          </div>
+        </div>
+      </nav>
+
+      <div class="container-fluid">
+        <div class="row" ng-app="billingList" ng-controller="BillingListController">
+          <h1 class="page-header main">Billing</h1>
+          <div class="col-md-12 main">            
+            <p class="lead">Listed below are all the Existing Billing Invoices.</p>
+
+            <div style="padding:20px 0px 60px 0px">
+              <span class="col-md-1" style="font-weight:bold">Search</span>
+              <span class="col-md-3">
+                <input type="text" class="form-control" ng-model="searchKeyword"/>
+              </span>          
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>TotalAmount</th>
+                    <th>Cash</th>
+                    <th>Credit</th>
+                    <th>CustomerName</th>
+                    <th>CreatedDate</th>
+                    <th>UpdatedDate</th>
+                  </tr>                  
+                </thead>
+                <tbody>                  
+                  <tr ng-repeat="i in billingInvoices | filter: searchKeyword" ng-click="open(i)" >
+                    <td>{{$index + 1}}</td>
+                    <td>{{i.totalAmount | currency}}</td>
+                    <td>{{i.cash | currency}}</td>
+                    <td>{{i.credit | currency}}</td>
+                    <td>{{i.customer.name}}</td>
+                    <td>{{i.createdDate | date}}</td>
+                    <td>{{i.updatedDate | date}}</td>
+                  </tr>              
+                </tbody>
+              </table>
+            </div>
+          </div>
+           <!-- Modal BillingInvoiceItems start -->
+            <script type="text/ng-template" id="billingInvoicesItemsModal.html">
+                  <div class="modal-header">
+                      <h3 class="modal-title">Billing Invoice Items</h3>
+                  </div>
+                  <div class="modal-body">
+                      <div class="table-responsive">
+                        <table class="table table-striped">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>ItemName</th>
+                              <th>Barcode</th>
+                              <th>Quantity</th>
+                              <th>PurchasePrice</th>
+                              <th>Total</th>
+                            </tr>                  
+                          </thead>
+                          <tbody>                  
+                            <tr ng-repeat="i in billingInvoicesItems"><td>{{$index + 1}}</td><td>{{i.itemName}}</td><td>{{i.barcode}}</td><td>{{i.quantity}}</td><td>{{i.purchasePrice | currency}}</td><td>{{i.total | currency}}</td></tr>              
+                          </tbody>
+                        </table>
+                      </div> 
+                  </div>
+                  
+                  <div class="modal-footer">
+                      <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+                  </div>
+            </script>
+          <!-- Modal BillingInvoiceItems End -->
+        </div>  
+      </div>
+  </body>
+</html>
