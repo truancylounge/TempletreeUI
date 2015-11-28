@@ -1,7 +1,7 @@
-var app = angular.module('item', ['ui.bootstrap'])
-app.controller('ItemController', ['$scope', '$http', '$modal', function($scope, $http, $modal) {
+var app = angular.module('itemList', ['ui.bootstrap'])
+app.controller('ItemListController', ['$scope', '$http', '$modal', function($scope, $http, $modal) {
 
-    var initialize = $http.get('../resources/config.json');
+    var initialize = $http.get('../../resources/config.json');
 
     initialize.success(function(data) {
       $scope.uiProperties = data;
@@ -14,9 +14,22 @@ app.controller('ItemController', ['$scope', '$http', '$modal', function($scope, 
         });
     });
 
+    $scope.deleteItem = function(i) {
+      console.log("Entering deleteItem function.");
+      $scope.items.forEach(function(item) {
+        if(item.barcode === i.barcode) {
+          item.action = 'D';
+        };
+      });
+    };
+
+    $scope.actionFilter = function(i) {
+      return i.action == 'U' || i.action == 'I';
+    };
+
     $scope.updateItems = function() {
       console.log("Updating items.");
-      var res = $http.post($scope.uiProperties.itemlistUrl, $scope.items);
+      var res = $http.put($scope.uiProperties.itemlistUrl, $scope.items);
       res.success(function(data, status, headers, config) {
         // On Success retrieve all items
         $http.get($scope.uiProperties.itemlistUrl).success(function(data) {
@@ -32,28 +45,6 @@ app.controller('ItemController', ['$scope', '$http', '$modal', function($scope, 
       console.log("Reverting items.");
       $http.get($scope.uiProperties.itemlistUrl).success(function(data) {
           $scope.items = data;
-      });
-    };
-
-    $scope.open = function () {
-      //alert("I am an alert box!");
-      console.log("Entering Add Items modal.");
-
-      var modalInstance = $modal.open({
-        templateUrl: 'addItemsModal.html',
-        controller: 'ItemModalController',
-        resolve: {
-          items: function () {
-            return $scope.items;
-          }
-        }
-      });
-    };
-
-    $scope.deleteItem = function(i) {
-      console.log("Entering deleteItem function.");
-      $scope.items = $scope.items.filter(function(item) {
-        return item.barcode !== i.barcode;
       });
     };
 
@@ -74,21 +65,6 @@ app.controller('ItemController', ['$scope', '$http', '$modal', function($scope, 
       });
     };
 }]);
-
-app.controller('ItemModalController', function ($scope, $modalInstance, items) {
-
-  $scope.items = items;
-
-  $scope.cancel = function () {
-    $modalInstance.dismiss('cancel');
-  };
-
-  $scope.addItems = function() {
-      $scope.items.push({"barcode": $scope.barcode, "category" : $scope.category, "itemName": $scope.itemName, "salesPrice": $scope.salesPrice, "purchasePrice": $scope.purchasePrice, "quantity": $scope.quantity});
-      console.log("Adding item with barcode : " + $scope.barcode);
-      $modalInstance.dismiss('save');
-  };
-});
 
 app.controller('EditItemModalController', ['$scope', '$modalInstance', 'updatedItem', 'items', function ($scope, $modalInstance, updatedItem, items) {
   
@@ -117,7 +93,8 @@ app.controller('EditItemModalController', ['$scope', '$modalInstance', 'updatedI
             item.itemName = $scope.itemName;
             item.salesPrice = $scope.salesPrice;
             item.purchasePrice = $scope.purchasePrice;
-            item.quantity = $scope.quantity;        
+            item.quantity = $scope.quantity; 
+            item.action = 'U';       
           }
         }
       }
@@ -127,3 +104,7 @@ app.controller('EditItemModalController', ['$scope', '$modalInstance', 'updatedI
   };
 }]);
 
+
+
+
+   

@@ -1,7 +1,7 @@
-var app = angular.module('customer', ['ui.bootstrap'])
-app.controller('CustomerController', ['$scope', '$http', '$modal', function($scope, $http, $modal) {
+var app = angular.module('customerList', ['ui.bootstrap'])
+app.controller('CustomerListController', ['$scope', '$http', '$modal', function($scope, $http, $modal) {
 
-	var initialize = $http.get('../resources/config.json');
+    var initialize = $http.get('../../resources/config.json');
 
     initialize.success(function(data) {
       $scope.uiProperties = data;
@@ -12,12 +12,12 @@ app.controller('CustomerController', ['$scope', '$http', '$modal', function($sco
         .error(function(data, status, headers, config) {
           alert( "failure message: " + JSON.stringify({data: data}));
         });
-    });
+    });  
 
     $scope.updateCustomers = function() {
-    	console.log("Updating Customers.");
-    	var res = $http.post($scope.uiProperties.customerlistUrl, $scope.customers);
-    	res.success(function(data, status, headers, config) {
+      console.log("Updating Customers.");
+      var res = $http.put($scope.uiProperties.customerlistUrl, $scope.customers);
+      res.success(function(data, status, headers, config) {
         // On Success retrieve all customers
         $http.get($scope.uiProperties.customerlistUrl).success(function(data) {
           $scope.customers = data;
@@ -29,29 +29,21 @@ app.controller('CustomerController', ['$scope', '$http', '$modal', function($sco
     };
 
     $scope.revertCustomers = function() {
-    	console.log("Reverting Customers.");
-    	$http.get($scope.uiProperties.customerlistUrl).success(function(data) {
+      console.log("Reverting Customers.");
+      $http.get($scope.uiProperties.customerlistUrl).success(function(data) {
           $scope.customers = data;
       });
-    };
+    }; 
 
-    $scope.open = function() {
-    	console.log("Entering Add Customers Modal.");
-    	var modalinstance = $modal.open({
-    		templateUrl: 'addCustomersModal.html',
-    		controller: 'CustomerModalController',
-    		resolve: {
-    			customers: function() {
-    				return $scope.customers;
-    			}
-    		}
-    	});
+    $scope.actionFilter = function(i) {
+      return i.action == 'U' || i.action == 'I';
     };
 
     $scope.deleteCustomer = function(i) {
       console.log("Entering DeleteCustomer function.");
-      $scope.customers = $scope.customers.filter(function(customer) {
-        return ((customer.name !== i.name) && (customer.email !== i.email) && (customer.telephoneNo !== i.telephoneNo));
+      $scope.customers.forEach(function(customer) {
+        if(customer === i)
+          customer.action = 'D';
       });
     };
 
@@ -71,20 +63,6 @@ app.controller('CustomerController', ['$scope', '$http', '$modal', function($sco
       });
     };
 }]);
-
-app.controller('CustomerModalController', function($scope, $modalInstance, customers) {
-	$scope.customers = customers;
-
-	$scope.cancel = function() {
-		$modalInstance.dismiss('cancel');
-	};
-
-	$scope.addCustomers = function() {
-		$scope.customers.push({"name": $scope.name, "email": $scope.email, "telephoneNo": $scope.telephoneNo});
-		console.log("Adding new Customer: " + $scope.name);
-		$modalInstance.dismiss('save');
-	};
-});
 
 app.controller('EditCustomerModalController',[ '$scope', '$modalInstance', 'updatedCustomer', 'customers', function($scope, $modalInstance, updatedCustomer, customers) {
   console.log("Entering EditCustomer modal controller");
@@ -109,6 +87,7 @@ app.controller('EditCustomerModalController',[ '$scope', '$modalInstance', 'upda
         console.log("Updating email and telephoneNo for Customer with name: " + customer.name);
         customer.email = $scope.email;
         customer.telephoneNo = $scope.telephoneNo;
+        customer.action = 'U';
       }
     }
     $modalInstance.dismiss(updatedCustomer);

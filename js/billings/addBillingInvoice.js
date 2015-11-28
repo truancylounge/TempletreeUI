@@ -1,14 +1,14 @@
 var app = angular.module('addBilling', ['ui.bootstrap']);
 app.controller('AddBillingController', ['$scope', '$http','$modal', function($scope, $http, $modal) {
 
-  var initialize = $http.get('../resources/config.json');
+  var initialize = $http.get('../../resources/config.json');
 
     initialize.success(function(data) {
       console.log("Entering Intialize");
       $scope.uiProperties = data;
       $scope.billingInvoice = {};
       $scope.billingInvoice.billingInvoicesItemsList = [];
-      $scope.billingInvoice.totalAmount;
+      $scope.billingInvoice.totalAmount = 0;
 
       $http.get($scope.uiProperties.itemlistUrl)
         .success(function(data) {
@@ -28,28 +28,25 @@ app.controller('AddBillingController', ['$scope', '$http','$modal', function($sc
 
     });
 
+    $scope.dropdownItemSelected = function(item) {
+      $scope.selectedItem = item;
+      $scope.quantity = 1;
+    }; 
+    
+  $scope.addItems = function() {
+    console.log("Adding new Item: " + $scope.selectedItem.itemName);
+    $scope.billingInvoice.totalAmount = $scope.billingInvoice.totalAmount + ($scope.selectedItem.purchasePrice * $scope.quantity);
+    $scope.billingInvoice.billingInvoicesItemsList.push({"barcode": $scope.selectedItem.barcode, "itemName" : $scope.selectedItem.itemName, "purchasePrice" : $scope.selectedItem.purchasePrice, "quantity" : $scope.quantity, "total" : $scope.selectedItem.purchasePrice * $scope.quantity});
+    $scope.quantity = 1;
+    console.log("Total amount" + $scope.billingInvoice.totalAmount);
+  };       
+
     $scope.createBillingInvoice = function() {
       console.log("Creating a new Billing Invoice");
       var res = $http.post($scope.uiProperties.billingInvoicelistUrl, $scope.billingInvoice);
       $scope.billingInvoice = {};
     };
 
-    $scope.addNewItemOpen = function () {
-      console.log("Entering AddBillingInvoice - Add Items modal.");
-
-      var modalInstance = $modal.open({
-        templateUrl: 'addItemsBillingInvoicesModal.html',
-        controller: 'AddItemsBillingInvoicesModalController',
-        resolve: {
-          billingInvoice: function() {
-            return $scope.billingInvoice;
-          },
-          items: function() {
-            return $scope.items;
-          }  
-        }
-      });      
-    };
 
     $scope.selectPaymentTypeOpen = function() {
       console.log("Entering Select Payment Type Modal.");
@@ -82,27 +79,6 @@ app.controller('AddBillingController', ['$scope', '$http','$modal', function($sc
       });
     };
 }]);
-
-app.controller('AddItemsBillingInvoicesModalController', function($scope, $modalInstance, billingInvoice, items) {
-  $scope.billingInvoice = billingInvoice;
-  $scope.billingInvoice.totalAmount = billingInvoice.totalAmount || 0;
-  $scope.items = items;
-
-  $scope.cancel = function() {
-    $modalInstance.dismiss('cancel');
-  };
-
-  $scope.dropdownItemSelected = function(item) {
-    $scope.selectedItem = item;
-  };
-
-  $scope.addItems = function() {
-    console.log("Adding new Item: " + $scope.selectedItem.itemName);
-    $scope.billingInvoice.totalAmount = $scope.billingInvoice.totalAmount + ($scope.selectedItem.purchasePrice * $scope.quantity);
-    $scope.billingInvoice.billingInvoicesItemsList.push({"barcode": $scope.selectedItem.barcode, "itemName" : $scope.selectedItem.itemName, "purchasePrice" : $scope.selectedItem.purchasePrice, "quantity" : $scope.quantity, "total" : $scope.selectedItem.purchasePrice * $scope.quantity});
-    $modalInstance.close('save');
-  };
-});
 
 app.controller('SelectPaymentTypeModalController', function($scope, $modalInstance, billingInvoice) {
   $scope.billingInvoice = billingInvoice;

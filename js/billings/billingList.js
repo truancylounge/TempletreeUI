@@ -1,7 +1,7 @@
-var app = angular.module('billing', ['ui.bootstrap']);
-app.controller('BillingController', ['$scope', '$http','$modal', function($scope, $http, $modal) {
+var app = angular.module('billingList', ['ui.bootstrap'])
+app.controller('BillingListController', ['$scope', '$http', '$modal', function($scope, $http, $modal) {
 
-  var initialize = $http.get('../resources/config.json');
+    var initialize = $http.get('../../resources/config.json');
 
     initialize.success(function(data) {
       $scope.uiProperties = data;
@@ -15,7 +15,6 @@ app.controller('BillingController', ['$scope', '$http','$modal', function($scope
     });
 
     $scope.open = function (i) {
-
       var modalInstance = $modal.open({
         templateUrl: 'billingInvoicesItemsModal.html',
         controller: 'BillingInvoicesModalController',
@@ -25,7 +24,7 @@ app.controller('BillingController', ['$scope', '$http','$modal', function($scope
           }
         }
       });
-    };
+    }; 
 }]);
 
 app.controller('BillingInvoicesModalController', function ($scope, $modalInstance, billingInvoicesItems) {
@@ -35,4 +34,12 @@ app.controller('BillingInvoicesModalController', function ($scope, $modalInstanc
     $scope.ok = function () {
       $modalInstance.dismiss('cancel');
     };
-  });
+});
+
+
+
+
+
+
+
+   

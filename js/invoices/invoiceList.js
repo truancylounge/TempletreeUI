@@ -1,8 +1,7 @@
-var app = angular.module('invoice', ['ui.bootstrap']);
-app.controller('InvoiceController', ['$scope', '$http','$modal', function($scope, $http, $modal) {
+var app = angular.module('invoiceList', ['ui.bootstrap'])
+app.controller('InvoiceListController', ['$scope', '$http', '$modal', function($scope, $http, $modal) {
 
-  var initialize = $http.get('../resources/config.json');
-
+    var initialize = $http.get('../../resources/config.json');
     initialize.success(function(data) {
       $scope.uiProperties = data;
       $http.get($scope.uiProperties.invoiceUrl)
@@ -28,6 +27,7 @@ app.controller('InvoiceController', ['$scope', '$http','$modal', function($scope
       });
     };
 }]);
+
 app.controller('InvoiceModalController', function ($scope, $modalInstance, invoiceItems) {
 
     $scope.invoiceItems = invoiceItems;
@@ -35,4 +35,10 @@ app.controller('InvoiceModalController', function ($scope, $modalInstance, invoi
     $scope.ok = function () {
       $modalInstance.dismiss('cancel');
     };
-  });
+});
+
+
+
+
+
+   
