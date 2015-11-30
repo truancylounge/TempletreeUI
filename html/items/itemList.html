@@ -96,8 +96,8 @@
                 <input type="text" class="form-control" ng-model="searchKeyword"/>
               </span>
               
-              <button type="button" class="btn btn-danger" ng-click="revertItems()">Revert</button>
-              <button type="Submit" class="btn btn-primary" ng-click="updateItems()">Save changes</button>
+              <button type="button" class="btn btn-danger" ng-click="revertItems()" ng-disabled="!checkValidity()">Revert</button>
+              <button type="Submit" class="btn btn-primary" ng-click="updateItems()" ng-disabled="!checkValidity()">Save changes</button>
             </div>
 
             <div class="table-responsive">
@@ -111,6 +111,8 @@
                     <th>SalesPrice</th>
                     <th>PurchasePrice</th>
                     <th>Quantity</th>
+                    <th>CreatedDate</th>
+                    <th>UpdatedDate</th>
                     <th>Edit</th>
                     <th>Delete</th>
                   </tr>                  
@@ -121,9 +123,11 @@
                     <td>{{i.barcode}}</td>
                     <td>{{i.category}}</td>
                     <td>{{i.itemName}}</td>
-                    <td>{{i.salesPrice | currency}}</td>
-                    <td>{{i.purchasePrice | currency}}</td>
+                    <td>{{i.salesPrice | currency:"&#8377;"}}</td>
+                    <td>{{i.purchasePrice | currency:"&#8377;"}}</td>
                     <td>{{i.quantity | number}}</td>
+                    <td>{{i.createdDate | date}}</td>
+                    <td>{{i.updatedDate | date}}</td>
                     <td>
                       <p><button class="btn btn-primary btn-xs" ng-click="editItemOpen(i)"><span class="glyphicon glyphicon-pencil"></span></button></p>
                     </td>
@@ -141,28 +145,28 @@
                     <h3 class="modal-title">Edit Item Details</h3>
                 </div>
                 <div class="modal-body">
-                  <form role="form">
+                  <form role="form" name="myForm" novalidate>
                     <div class="form-group">
                       <label>ItemName:</label>
-                      <input type="text" class="form-control" id="itemName" ng-model="itemName">
+                      <input type="text" class="form-control" id="itemName" ng-model="itemName" required>
                     </div>
                     <div class="form-group">
                       <label>Quantity:</label>
-                      <input type="text" class="form-control" id="quantity" ng-model="quantity">
+                      <input type="text" class="form-control" id="quantity" ng-model="quantity" required>
                     </div>
                     <div class="form-group">
                       <label>SalesPrice:</label>
-                      <input type="text" class="form-control" id="salesPrice" ng-model="salesPrice">
+                      <input type="text" class="form-control" id="salesPrice" ng-model="salesPrice" required>
                     </div>
                     <div class="form-group">
                       <label>PurchasePrice:</label>
-                      <input type="text" class="form-control" id="purchasePrice" ng-model="purchasePrice">
+                      <input type="text" class="form-control" id="purchasePrice" ng-model="purchasePrice" required>
                     </div>
                   </form>
                 </div>       
                 <div class="modal-footer">
                   <button type="button" ng-click="cancel()">Close</button>
-                  <button type="Submit" class="btn btn-primary" ng-click="editItem()">Save changes</button>
+                  <button type="Submit" class="btn btn-primary" ng-click="editItem()" ng-disabled="myForm.$invalid || myForm.$pristine">Save changes</button>
                 </div>           
           </script>
         </div>  

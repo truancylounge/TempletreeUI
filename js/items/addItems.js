@@ -41,7 +41,11 @@ app.controller('AddItemController', ['$scope', '$http', function($scope, $http) 
       });   
     };
 
-    // Methods for addItems.html
+    $scope.checkValidity = function() {
+      return ($scope.newItems != undefined && 
+        $scope.newItems.length > 0);
+    };
+    
 }]);
 
 

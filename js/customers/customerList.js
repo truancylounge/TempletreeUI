@@ -47,6 +47,21 @@ app.controller('CustomerListController', ['$scope', '$http', '$modal', function(
       });
     };
 
+    $scope.checkValidity = function() {
+      // Looping through customers to find out if customer has been updated or deleted, if so enable Revert and Save buttons.
+      var validity = false;
+      
+      for(var index in $scope.customers) {
+        var customer = $scope.customers[index];
+        if(customer.action == 'U' || customer.action =='D') {
+          validity = true;
+          break;
+        }
+      }
+      
+      return validity;
+    };
+
     $scope.editCustomerOpen = function(i) {
       console.log("Entering EditCustomer modal.");
       var modalInstance = $modal.open({

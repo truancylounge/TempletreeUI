@@ -106,10 +106,21 @@
                     <th>Shipping</th>
                     <th>Packing</th>
                     <th>GrandTotal</th>
+                    <th>CreatedDate</th>
+                    <th>UpdatedDate</th>
                   </tr>                  
                 </thead>
                 <tbody>                  
-                  <tr ng-repeat="i in invoices | filter: searchKeyword" ng-click="open(i)" ><td>{{$index + 1}}</td><td>{{i.invoiceName}}</td><td>{{i.subTotal | currency}}</td><td>{{i.shipping | currency}}</td><td>{{i.packing | currency}}</td><td>{{i.grandTotal | currency}}</td></tr>              
+                  <tr ng-repeat="i in invoices | filter: searchKeyword" ng-click="open(i)" >
+                    <td>{{$index + 1}}</td>
+                    <td>{{i.invoiceName}}</td>
+                    <td>{{i.subTotal | currency:"&#8377;"}}</td>
+                    <td>{{i.shipping | currency:"&#8377;"}}</td>
+                    <td>{{i.packing | currency:"&#8377;"}}</td>
+                    <td>{{i.grandTotal | currency:"&#8377;"}}</td>
+                    <td>{{i.createdDate | date}}</td>
+                    <td>{{i.updatedDate | date}}</td>
+                  </tr>              
                 </tbody>
               </table>
             </div>             
@@ -133,7 +144,7 @@
                             </tr>                  
                           </thead>
                           <tbody>                  
-                            <tr ng-repeat="i in invoiceItems"><td>{{$index + 1}}</td><td>{{i.itemName}}</td><td>{{i.barcode}}</td><td>{{i.quantity}}</td><td>{{i.purchasePrice | currency}}</td><td>{{i.total | currency}}</td></tr>              
+                            <tr ng-repeat="i in invoiceItems"><td>{{$index + 1}}</td><td>{{i.itemName}}</td><td>{{i.barcode}}</td><td>{{i.quantity}}</td><td>{{i.purchasePrice | currency:"&#8377;"}}</td><td>{{i.total | currency:"&#8377;"}}</td></tr>              
                           </tbody>
                         </table>
                       </div> 
