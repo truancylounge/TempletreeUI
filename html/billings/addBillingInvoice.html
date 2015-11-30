@@ -100,18 +100,18 @@
               </ul>
             </div>
 
-            <form role="form">
+            <form role="form" name="myForm" novalidate>
               <div class="form-group">
                 <label>Barcode:</label>
-                <span type="text" class=" form-control" id="barcode" ng-model="barcode">{{selectedItem.barcode}}</span>
+                <span type="text" class=" form-control" id="barcode" ng-model="barcode" required>{{selectedItem.barcode}}</span>
               </div>
               <div class="form-group">
                 <label>ItemName:</label>
-                <span type="text" class=" form-control" id="itemName" ng-model="itemName">{{selectedItem.itemName}}</span>
+                <span type="text" class=" form-control" id="itemName" ng-model="itemName" required>{{selectedItem.itemName}}</span>
               </div>
               <div class="form-group">
                 <label>MRP:</label>
-                <span type="text" class=" form-control" id="purchasePrice" ng-model="purchasePrice">{{selectedItem.purchasePrice}}</span>
+                <span type="text" class=" form-control" id="purchasePrice" ng-model="purchasePrice" required>{{selectedItem.purchasePrice}}</span>
               </div>
               <div class="form-group">
                 <label>Quantity:</label>
@@ -119,19 +119,17 @@
               </div>
               <div class="form-group">
                 <label>Total:</label>
-                <span class="form-control" id="total">{{selectedItem.purchasePrice * quantity}}</span>
+                <span class="form-control" id="total">{{selectedItem.purchasePrice * quantity || 0}}</span>
               </div>
-              <button type="Submit" class="btn btn-primary" ng-click="addItems()">AddItem</button>
+              <button type="Submit" class="btn btn-primary" ng-click="addItems()" ng-disabled="!checkMyFormValidity()">AddItem</button>
             </form>
           </div>
 
 
           <div class="col-md-9 main">
             <p class="lead">Purchased Items</p>
-            <button type="button" class="btn btn-primary btn-lg" ng-click="selectPaymentTypeOpen()">Select Payment Type</button>
-            <button type="button" class="btn btn-default btn-lg" ng-click="addCustomerDetailsOpen()">Add Customer Details</button>         
-            
-
+            <button type="button" class="btn btn-primary btn-lg" ng-click="selectPaymentTypeOpen()" ng-disabled="!checkPurchaseItemsValidity()">Select Payment Type</button>
+            <button type="button" class="btn btn-default btn-lg" ng-click="addCustomerDetailsOpen()" ng-disabled="!checkPurchaseItemsValidity()">Add Customer Details</button>
             <div class="table-responsive">
               <table class="table table-hover">
                 <thead>
@@ -145,18 +143,16 @@
                   </tr>                  
                 </thead>
                 <tbody>                  
-                  <tr ng-repeat="i in billingInvoice.billingInvoicesItemsList | filter: searchKeyword"><td>{{$index + 1}}</td><td>{{i.barcode}}</td><td>{{i.itemName}}</td><td>{{i.quantity}}</td><td>{{i.purchasePrice | currency}}</td><td>{{i.total | currency}}</td>
+                  <tr ng-repeat="i in billingInvoice.billingInvoicesItemsList | filter: searchKeyword"><td>{{$index + 1}}</td><td>{{i.barcode}}</td><td>{{i.itemName}}</td><td>{{i.quantity}}</td><td>{{i.purchasePrice | currency:"&#8377;"}}</td><td>{{i.total | currency:"&#8377;"}}</td>
                   </tr>                          
                 </tbody>
               </table>
             </div>
-            <div style="font-size:24px; display:inline-block" class="col-md-4 main" id="results">Credit: {{billingInvoice.credit | currency}}</div>
-            <div style="font-size:24px; display:inline-block" class="col-md-4  main" id="results">Cash: {{billingInvoice.cash | currency}}</div>
-            <div style="font-size:24px; display:inline-block" class="col-md-4 main" id="results">Total: {{billingInvoice.totalAmount | currency}}</div>
-            
-            <button type="button" class="btn btn-lg btn-primary col-md-offset-9" ng-click="createBillingInvoice()">Bill Invoice</button>            
+            <div style="font-size:24px; display:inline-block" class="col-md-4  main" id="results">Cash: {{billingInvoice.cash | currency:"&#8377;"}}</div>
+            <div style="font-size:24px; display:inline-block" class="col-md-4 main" id="results">Credit: {{billingInvoice.credit | currency:"&#8377;"}}</div>
+            <div style="font-size:24px; display:inline-block" class="col-md-4 main" id="results">Total: {{billingInvoice.totalAmount | currency:"&#8377;"}}</div>            
+            <button type="button" class="btn btn-lg btn-primary col-md-offset-9" ng-click="createBillingInvoice()" ng-disabled="!checkBillInvoiceValidity()">Bill Invoice</button>
           </div>
-
 
             <!-- Select Payment Type Modal start -->
             <script type="text/ng-template" id="selectPaymentTypeModal.html">
@@ -179,7 +175,7 @@
 
                   <div class="modal-footer">
                     <button type="button" ng-click="cancel()">Close</button>
-                    <button type="Submit" class="btn btn-primary" ng-click="addPaymentType()">Add Payment Type</button>
+                    <button type="Submit" class="btn btn-primary" ng-click="addPaymentType()" ng-disabled="!checkSelectPaymentValidity()">Add Payment Type</button>
                   </div>           
 
             </script>
@@ -201,32 +197,27 @@
                       </ul>
                     </div>
 
-                    <form role="form">
+                    <form role="form" name="myForm" novalidate>
                       <div class="form-group">
                         <label>Customer Name:</label>
-                        <span type="text" class=" form-control" id="name" ng-model="name">{{selectedCustomer.name}}</span>
+                        <span type="text" name="name" class="form-control" id="name" ng-model="name">{{selectedCustomer.name}}</span>
                       </div>
                       <div class="form-group">
                         <label>Customer Email:</label>
-                        <span type="text" class=" form-control" id="email" ng-model="email">{{selectedCustomer.email}}</span>
+                        <span type="text" class="form-control" id="email" ng-model="email">{{selectedCustomer.email}}</span>
                       </div>
                       <div class="form-group">
                         <label>Telephone Number</label>
-                        <span type="text" class=" form-control" id="telephoneNo" ng-model="purchasePrice">{{selectedCustomer.telephoneNo}}</span>
+                        <span type="text" class="form-control" id="telephoneNo" ng-model="telephoneNo">{{selectedCustomer.telephoneNo}}</span>
                       </div>
                     </form>
                   </div>                      
                   <div class="modal-footer">
                     <button type="button" ng-click="cancel()">Close</button>
-                    <button type="Submit" class="btn btn-primary" ng-click="addCustomer()">Add Customer Details</button>
+                    <button type="Submit" class="btn btn-primary" ng-click="addCustomer()" ng-disabled="selectedCustomer.name === undefined">Add Customer Details</button>
                   </div>       
             </script>
           <!-- Add Customer Info Modal End -->
-
-
-
-
-
         </div>  
       </div>
   </body>

@@ -87,20 +87,28 @@
           <div class="col-md-3 main">            
             <p class="lead">Add New Customers</p>
 
-            <form role="form">
+            <form role="form" name="myForm" novalidate>
               <div class="form-group">
                 <label>CustomerName:</label>
-                <input type="text" class="form-control" id="name" ng-model="name">
+                <input type="text" name="name" class="form-control" id="name" ng-model="name" ng-minlength="3" ng-maxlength="40"required>
+                <p style="color:red" ng-show="myForm.name.$error.minlength">Customer Name is too short.</p>
+                <p style="color:red" ng-show="myForm.name.$error.maxlength">Customer Name is too long.</p>
               </div>
               <div class="form-group">
                 <label>Email:</label>
-                <input type="text" class="form-control" id="email" ng-model="email">
-              </div>
+                <input type="email" name="email" class="form-control" id="email" ng-model="email" required>
+                <p style="color:red" ng-show="myForm.email.$error.email">Invalid email address.</p>
+                <!--span style="color:red" ng-show="myForm.email.$dirty && myForm.email.$invalid">
+                  <span ng-show="myForm.email.$error.required">Email is required.</span>
+                  <span ng-show="myForm.email.$error.email">Invalid email address.</span>
+                </span-->
+              </div>              
+
               <div class="form-group">
                 <label>TelephoneNumber:</label>
-                <input type="text" class="form-control" id="telephoneNo" ng-model="telephoneNo">
+                <input type="string" name="telephoneNo" class="form-control" id="telephoneNo" ng-model="telephoneNo" required>
               </div>
-              <button type="Submit" class="btn btn-primary" ng-click="addCustomer()">AddCustomer</button>
+              <button type="Submit" class="btn btn-primary" ng-click="addCustomer()" ng-disabled="myForm.$invalid">AddCustomer</button>
             </form>
           </div>
 
@@ -130,7 +138,7 @@
                 </tbody>
               </table>
             </div> 
-            <button type="Submit" class="btn btn-primary" ng-click="updateCustomers()">Add New Customers</button>
+            <button type="Submit" class="btn btn-primary" ng-click="updateCustomers()" ng-disabled="!checkValidity()">Add New Customers</button>
           </div> 
       </div>
     </div>

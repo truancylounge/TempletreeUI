@@ -101,6 +101,7 @@
                 <thead>
                   <tr>
                     <th>#</th>
+                    <th>InvoiceNumber</th>
                     <th>TotalAmount</th>
                     <th>Cash</th>
                     <th>Credit</th>
@@ -112,9 +113,10 @@
                 <tbody>                  
                   <tr ng-repeat="i in billingInvoices | filter: searchKeyword" ng-click="open(i)" >
                     <td>{{$index + 1}}</td>
-                    <td>{{i.totalAmount | currency}}</td>
-                    <td>{{i.cash | currency}}</td>
-                    <td>{{i.credit | currency}}</td>
+                    <td>{{i.invoiceName}}</td>
+                    <td>{{i.totalAmount | currency:"&#8377;"}}</td>
+                    <td>{{i.cash | currency:"&#8377;"}}</td>
+                    <td>{{i.credit | currency:"&#8377;"}}</td>
                     <td>{{i.customer.name}}</td>
                     <td>{{i.createdDate | date}}</td>
                     <td>{{i.updatedDate | date}}</td>
@@ -142,7 +144,7 @@
                             </tr>                  
                           </thead>
                           <tbody>                  
-                            <tr ng-repeat="i in billingInvoicesItems"><td>{{$index + 1}}</td><td>{{i.itemName}}</td><td>{{i.barcode}}</td><td>{{i.quantity}}</td><td>{{i.purchasePrice | currency}}</td><td>{{i.total | currency}}</td></tr>              
+                            <tr ng-repeat="i in billingInvoicesItems"><td>{{$index + 1}}</td><td>{{i.itemName}}</td><td>{{i.barcode}}</td><td>{{i.quantity}}</td><td>{{i.purchasePrice | currency:"&#8377;"}}</td><td>{{i.total | currency:"&#8377;"}}</td></tr>              
                           </tbody>
                         </table>
                       </div> 

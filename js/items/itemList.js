@@ -48,6 +48,20 @@ app.controller('ItemListController', ['$scope', '$http', '$modal', function($sco
       });
     };
 
+    $scope.checkValidity = function() {
+      // Looping through items to find out if item has been updated or deleted, if so enable Revert and Save buttons.
+      var validity = false;
+      
+      for(var index in $scope.items) {
+        var item = $scope.items[index];
+        if(item.action == 'U' || item.action =='D') {
+          validity = true;
+          break;
+        }
+      }      
+      return validity;
+    };    
+
     $scope.editItemOpen = function(i) {
       console.log("Entering EditItem modal.");
 

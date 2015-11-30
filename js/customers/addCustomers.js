@@ -34,4 +34,8 @@ app.controller('AddCustomerController', ['$scope', '$http', function($scope, $ht
       return customer !== i;
     });
   };
+  $scope.checkValidity = function() {
+    return ($scope.newCustomers != undefined && 
+      $scope.newCustomers.length > 0);
+  };
 }]);

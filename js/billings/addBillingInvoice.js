@@ -39,14 +39,34 @@ app.controller('AddBillingController', ['$scope', '$http','$modal', function($sc
     $scope.billingInvoice.billingInvoicesItemsList.push({"barcode": $scope.selectedItem.barcode, "itemName" : $scope.selectedItem.itemName, "purchasePrice" : $scope.selectedItem.purchasePrice, "quantity" : $scope.quantity, "total" : $scope.selectedItem.purchasePrice * $scope.quantity});
     $scope.quantity = 1;
     console.log("Total amount" + $scope.billingInvoice.totalAmount);
+    $scope.selectedItem = null;
   };       
 
     $scope.createBillingInvoice = function() {
       console.log("Creating a new Billing Invoice");
       var res = $http.post($scope.uiProperties.billingInvoicelistUrl, $scope.billingInvoice);
       $scope.billingInvoice = {};
+      $scope.billingInvoice.billingInvoicesItemsList = [];
+      $scope.billingInvoice.totalAmount = 0;
     };
 
+    // Allowing the AddItem button on ly if an item has been selected.
+    $scope.checkMyFormValidity = function() {
+      return ((typeof $scope.selectedItem != "undefined") && ($scope.selectedItem != null));
+    };
+
+    // Allowing SelectPaymentType and Add Customer Details buttons to be selected if items are added to Purchased list.
+    // Error being thrown coz billingInvoice hasn't been initialized until initialize.success() hence adding this condition.
+    $scope.checkPurchaseItemsValidity = function() {
+      return typeof($scope.billingInvoice) !== 'undefined' && $scope.billingInvoice.billingInvoicesItemsList.length > 0;
+    };
+
+    // Enabling Bill Invoice button only if cash + credit = totalAmount
+    $scope.checkBillInvoiceValidity = function() {
+      //unary plus operator to convert them to numbers first.
+      // Error being thrown coz billingInvoice hasn't been initialized until initialize.success() hence adding this condition.
+      return typeof($scope.billingInvoice) !== 'undefined' && (+$scope.billingInvoice.cash + +$scope.billingInvoice.credit == +$scope.billingInvoice.totalAmount);
+    };
 
     $scope.selectPaymentTypeOpen = function() {
       console.log("Entering Select Payment Type Modal.");
@@ -74,7 +94,7 @@ app.controller('AddBillingController', ['$scope', '$http','$modal', function($sc
           },
           customers: function() {
             return $scope.customers;
-          }                  
+          }
         }
       });
     };
@@ -82,6 +102,13 @@ app.controller('AddBillingController', ['$scope', '$http','$modal', function($sc
 
 app.controller('SelectPaymentTypeModalController', function($scope, $modalInstance, billingInvoice) {
   $scope.billingInvoice = billingInvoice;
+
+  // Enabling AddPaymentType modal button only if cash + credit = totalAmount
+  $scope.checkSelectPaymentValidity = function() {
+    //unary plus operator to convert them to numbers first.
+    return ((+$scope.cash + +$scope.credit) == +billingInvoice.totalAmount);
+  };
+
 
   $scope.cancel = function() {
     $modalInstance.dismiss('cancel');
@@ -98,6 +125,7 @@ app.controller('SelectPaymentTypeModalController', function($scope, $modalInstan
 app.controller('AddCustomerDetailsModalController', function($scope, $modalInstance, billingInvoice, customers) {
   $scope.billingInvoice = billingInvoice;
   $scope.customers = customers;
+  $scope.selectedCustomer = $scope.billingInvoice.customer;
 
   $scope.cancel = function() {
     $modalInstance.dismiss('cancel');
