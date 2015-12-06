@@ -66,7 +66,15 @@
                   <li><a href="../customers/addCustomers.html">AddCustomers</a></li>
                   <li><a href="../customers/customerList.html">CustomerList</a></li>
                 </ul>
-              </li>              
+              </li>  
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="../users/addUsers.html">AddNewUser</a></li>
+                  <li><a href="../users/userList.html">UserList</a></li>
+                </ul>                
+              </li>                          
+                          
               
             </ul>
 
@@ -126,8 +134,8 @@
                     <td>{{i.salesPrice | currency:"&#8377;"}}</td>
                     <td>{{i.purchasePrice | currency:"&#8377;"}}</td>
                     <td>{{i.quantity | number}}</td>
-                    <td>{{i.createdDate | date}}</td>
-                    <td>{{i.updatedDate | date}}</td>
+                    <td>{{i.createdDate | date:'MM/dd/yyyy HH:mm:ss'}}</td>
+                    <td>{{i.updatedDate | date:'MM/dd/yyyy HH:mm:ss'}}</td>
                     <td>
                       <p><button class="btn btn-primary btn-xs" ng-click="editItemOpen(i)"><span class="glyphicon glyphicon-pencil"></span></button></p>
                     </td>

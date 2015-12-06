@@ -18,7 +18,7 @@
     
     <!-- Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="../../js/invoices/invoiceList.js"></script>
+    <script src="../../js/users/userList.js"></script>
 
     <script src="../../resources/config.js"></script>
     
@@ -49,8 +49,8 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Invoices <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                  <li><a href="uploadInvoices.html">UploadNewInvoices</a></li>
-                  <li><a href="invoicesList.html">InvoiceList</a></li>
+                  <li><a href="../invoices/uploadInvoices.html">UploadNewInvoices</a></li>
+                  <li><a href="../invoices/invoicesList.html">InvoiceList</a></li>
                 </ul>
               </li>  
               <li class="dropdown">
@@ -59,7 +59,7 @@
                   <li><a href="../billings/addBillingInvoice.html">NewBill</a></li>
                   <li><a href="../billings/billingInvoicesList.html">BillingInvoices</a></li>
                 </ul>
-              </li>                                                      
+              </li>                                                                                                       
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Customers <span class="caret"></span></a>
                 <ul class="dropdown-menu">
@@ -70,11 +70,10 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                  <li><a href="../users/addUsers.html">AddNewUser</a></li>
-                  <li><a href="../users/userList.html">UserList</a></li>
+                  <li><a href="addUsers.html">AddNewUser</a></li>
+                  <li><a href="userList.html">UserList</a></li>
                 </ul>                
-              </li>                          
-                         
+              </li>            
             </ul>
 
             <ul class="nav navbar-nav navbar-right">
@@ -92,16 +91,16 @@
       </nav>
 
       <div class="container-fluid">
-        <div class="row" ng-app="invoiceList" ng-controller="InvoiceListController">
-          <h1 class="page-header main">Invoices</h1>
+        <div class="row" ng-app="userList" ng-controller="UserListController">
+          <h1 class="page-header main">User Management</h1>
           <div class="col-md-12 main">            
-            <p class="lead">Listed below are all the Existing Invoices.</p>
+            <p class="lead">Listed below are all the Existing Users.</p>
 
             <div style="padding:20px 0px 60px 0px">
               <span class="col-md-1" style="font-weight:bold">Search</span>
               <span class="col-md-3">
                 <input type="text" class="form-control" ng-model="searchKeyword"/>
-              </span>              
+              </span>
             </div>
 
             <div class="table-responsive">
@@ -109,62 +108,66 @@
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>InvoiceName</th>
-                    <th>SubTotal</th>
-                    <th>Shipping</th>
-                    <th>Packing</th>
-                    <th>GrandTotal</th>
+                    <th>UserName</th>
+                    <th>Role</th>
                     <th>CreatedDate</th>
                     <th>UpdatedDate</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
                   </tr>                  
                 </thead>
-                <tbody>                  
-                  <tr ng-repeat="i in invoices | filter: searchKeyword" ng-click="open(i)" >
+                <tbody ng-repeat="i in users | filter: actionFilter | filter: searchKeyword" >                  
+                  <tr>
                     <td>{{$index + 1}}</td>
-                    <td>{{i.invoiceName}}</td>
-                    <td>{{i.subTotal | currency:"&#8377;"}}</td>
-                    <td>{{i.shipping | currency:"&#8377;"}}</td>
-                    <td>{{i.packing | currency:"&#8377;"}}</td>
-                    <td>{{i.grandTotal | currency:"&#8377;"}}</td>
+                    <td>{{i.username}}</td>
+                    <td>{{i.role}}</td>
                     <td>{{i.createdDate | date:'MM/dd/yyyy HH:mm:ss'}}</td>
                     <td>{{i.updatedDate | date:'MM/dd/yyyy HH:mm:ss'}}</td>
+                    <td>
+                      <p><button class="btn btn-primary btn-xs" ng-click="editUserOpen(i)"><span class="glyphicon glyphicon-pencil"></span></button></p>
+                    </td>
+                    <td>
+                      <p><button class="btn btn-danger btn-xs " ng-click="deleteUser(i)"><span class="glyphicon glyphicon-trash"></span></button></p>
+                    </td>
                   </tr>              
                 </tbody>
               </table>
-            </div>             
+            </div>            
           </div>
-            <!-- Modal InvoiceItems start -->
-            <script type="text/ng-template" id="invoiceItemsModal.html">
-                  <div class="modal-header">
-                      <h3 class="modal-title">Invoice Items</h3>
-                  </div>
-                  <div class="modal-body">
-                      <div class="table-responsive">
-                        <table class="table table-striped">
-                          <thead>
-                            <tr>
-                              <th>#</th>
-                              <th>ItemName</th>
-                              <th>Barcode</th>
-                              <th>Quantity</th>
-                              <th>PurchasePrice</th>
-                              <th>Total</th>
-                            </tr>                  
-                          </thead>
-                          <tbody>                  
-                            <tr ng-repeat="i in invoiceItems"><td>{{$index + 1}}</td><td>{{i.itemName}}</td><td>{{i.barcode}}</td><td>{{i.quantity}}</td><td>{{i.purchasePrice | currency:"&#8377;"}}</td><td>{{i.total | currency:"&#8377;"}}</td></tr>              
-                          </tbody>
-                        </table>
-                      </div> 
-                  </div>
-                  
-                  <div class="modal-footer">
-                      <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-                  </div>
-            </script>
-          <!-- Modal InvoiceItems End -->                    
-
-
+          <!-- Modal Item Edit start -->
+          <script type="text/ng-template" id="editUsersModal.html">
+                <div class="modal-header">
+                    <h3 class="modal-title">Edit Item Details</h3>
+                </div>
+                <div class="modal-body">
+                  <form role="form" name="myForm" novalidate>
+                    <div class="form-group">
+                      <label>Username:</label>
+                      <span type="text" class=" form-control" id="username" ng-model="username" required>{{username}}</span>
+                    </div>
+                    <div class="form-group">
+                      <label>New Password:</label>
+                      <input type="password" name="password" class="form-control" id="password" ng-model="password" required>
+                    </div>
+                    <div class="form-group">
+                      <label>Role:</label>
+                      <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="rolesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" required>
+                          {{selectedRole}}
+                          <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu scrollable-menu" aria-labelledby="rolesMenu">
+                          <li ng-repeat="role in roles"><a ng-click="dropdownRoleSelected(role)" required>{{role}}</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </form>
+                </div>       
+                <div class="modal-footer">
+                  <button type="button" ng-click="cancel()">Close</button>
+                  <button type="Submit" class="btn btn-primary" ng-click="editUser()" ng-disabled="myForm.$invalid || myForm.$pristine">Save changes</button>
+                </div>           
+          </script>
         </div>  
       </div>
   </body>
