@@ -1,17 +1,23 @@
 var app = angular.module('itemList', ['ui.bootstrap'])
-app.controller('ItemListController', ['$scope', '$http', '$modal', function($scope, $http, $modal) {
+app.controller('ItemListController', ['$scope', '$http', '$modal', '$window', function($scope, $http, $modal, $window) {
 
     var initialize = $http.get('../../resources/config.json');
 
     initialize.success(function(data) {
       $scope.uiProperties = data;
-      $http.get($scope.uiProperties.itemlistUrl)
-        .success(function(data) {
-          $scope.items = data;
-        })
-        .error(function(data, status, headers, config) {
-          alert( "failure message: " + JSON.stringify({data: data}));
-        });
+      console.log("Token acquired : " + $window.sessionStorage.token);  
+      $http({
+        method: 'GET',
+        url: $scope.uiProperties.itemlistUrl + "?token=" + $window.sessionStorage.token
+      }).then(function successCallback(response) {
+        $scope.items = response.data;
+        $window.sessionStorage.token = response.headers('X-Templteree-Auth-Token');
+        }, function errorCallback(response) {
+          if(response.status == 403) {
+            console.log("Redirecting to login page! Invalid Token.");
+            $window.location.href = '../sign_in.html';
+          }
+      });
     });
 
     $scope.deleteItem = function(i) {
