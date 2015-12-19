@@ -1,4 +1,31 @@
-var app = angular.module('addCustomer', [])
+var dependentApp = angular.module('dependency',[]);
+dependentApp.factory('tokenHttpInterceptor', ['$q', '$window', function ($q, $window) {
+        return {
+            'request': function (config) {
+              console.log('Request Interceptor: Adding token : ' + $window.sessionStorage.token);
+              config.headers.Authorization = $window.sessionStorage.token;
+              return config;
+            },
+
+            'response': function (response) {              
+              console.log('Response Interceptor: New Token: ' + response.headers('X-Templteree-Auth-Token') );
+              $window.sessionStorage.token = response.headers('X-Templteree-Auth-Token') || $window.sessionStorage.token;
+              return response;
+            },
+            'responseError': function(response) {
+              if(response.status === 403) {
+                console.log("Redirecting to login page! Invalid Token.");
+                $window.location.href = '../sign_in.html';
+              }
+              return response;  
+            }
+        };
+}]);
+dependentApp.config(['$httpProvider', function($httpProvider) {
+  $httpProvider.interceptors.push('tokenHttpInterceptor');
+}]);
+
+var app = angular.module('addCustomer', ['dependency'])
 app.controller('AddCustomerController', ['$scope', '$http', function($scope, $http) {
 
 	var initialize = $http.get('../../resources/config.json');

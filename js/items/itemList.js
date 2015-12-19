@@ -1,23 +1,38 @@
-var app = angular.module('itemList', ['ui.bootstrap'])
+var dependentApp = angular.module('dependency',[]);
+dependentApp.factory('tokenHttpInterceptor', ['$q', '$window', function ($q, $window) {
+        return {
+            'request': function (config) {
+              console.log('Request Interceptor: Adding token : ' + $window.sessionStorage.token);
+              config.headers.Authorization = $window.sessionStorage.token;
+              return config;
+            },
+
+            'response': function (response) {              
+              console.log('Response Interceptor: New Token: ' + response.headers('X-Templteree-Auth-Token') );
+              $window.sessionStorage.token = response.headers('X-Templteree-Auth-Token') || $window.sessionStorage.token;
+              return response;
+            },
+            'responseError': function(response) {
+              if(response.status === 403) {
+                console.log("Redirecting to login page! Invalid Token.");
+                $window.location.href = '../sign_in.html';
+              }
+              return response;  
+            }
+        };
+}]);
+dependentApp.config(['$httpProvider', function($httpProvider) {
+  $httpProvider.interceptors.push('tokenHttpInterceptor');
+}]);
+
+var app = angular.module('itemList', ['ui.bootstrap', 'dependency']);
 app.controller('ItemListController', ['$scope', '$http', '$modal', '$window', function($scope, $http, $modal, $window) {
 
     var initialize = $http.get('../../resources/config.json');
 
     initialize.success(function(data) {
-      $scope.uiProperties = data;
-      console.log("Token acquired : " + $window.sessionStorage.token);  
-      $http({
-        method: 'GET',
-        url: $scope.uiProperties.itemlistUrl + "?token=" + $window.sessionStorage.token
-      }).then(function successCallback(response) {
-        $scope.items = response.data;
-        $window.sessionStorage.token = response.headers('X-Templteree-Auth-Token');
-        }, function errorCallback(response) {
-          if(response.status == 403) {
-            console.log("Redirecting to login page! Invalid Token.");
-            $window.location.href = '../sign_in.html';
-          }
-      });
+      $scope.uiProperties = data;  
+      $scope.retriveAllItems();
     });
 
     $scope.deleteItem = function(i) {
@@ -35,24 +50,48 @@ app.controller('ItemListController', ['$scope', '$http', '$modal', '$window', fu
 
     $scope.updateItems = function() {
       console.log("Updating items.");
-      var res = $http.put($scope.uiProperties.itemlistUrl, $scope.items);
-      res.success(function(data, status, headers, config) {
-        // On Success retrieve all items
-        $http.get($scope.uiProperties.itemlistUrl).success(function(data) {
-          $scope.items = data;
-        });
-      });
-      res.error(function(data, status, headers, config) {
-        alert( "failure message: " + JSON.stringify({data: data}));
-      });   
+      $scope.saveItems();   
     };
 
     $scope.revertItems = function() {
       console.log("Reverting items.");
-      $http.get($scope.uiProperties.itemlistUrl).success(function(data) {
-          $scope.items = data;
-      });
+      $scope.retriveAllItems();
     };
+
+    /* Start of REST Call functions */
+
+    $scope.successGETCallback = function(response) {
+      $scope.items = response.data;
+    };
+
+    $scope.errorGETCallback = function(response) {
+      alert( "failure message: " + JSON.stringify({data: response.data}));
+    };
+
+    $scope.retriveAllItems = function() {
+      $http({
+        method: 'GET',
+        url: $scope.uiProperties.itemlistUrl
+      }).then($scope.successGETCallback, $scope.errorGETCallback);      
+    };
+
+    $scope.successPUTCallback = function(response) {
+      $scope.retriveAllItems();
+    };
+
+    $scope.errorPUTCallback = function(response) {
+      alert( "failure message: " + JSON.stringify({data: response.data}));
+    };    
+
+    $scope.saveItems = function() {
+      $http({
+        method: 'PUT',
+        url: $scope.uiProperties.itemlistUrl,
+        data: $scope.items
+      }).then($scope.successPUTCallback, $scope.errorPUTCallback);
+    };
+    /* End of REST Call functions */    
+
 
     $scope.checkValidity = function() {
       // Looping through items to find out if item has been updated or deleted, if so enable Revert and Save buttons.

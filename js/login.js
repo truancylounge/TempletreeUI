@@ -1,8 +1,10 @@
-var app = angular.module('login', [])
+
+var app = angular.module('login', []);
 app.controller('LoginController', ['$scope', '$http', '$window', function($scope, $http, $window) {
 
 	var initialize = $http.get('../resources/config.json');
     initialize.success(function(data) {
+      console.log("Login initialize success!");
       $scope.uiProperties = data;
       $scope.user = {};
     });
