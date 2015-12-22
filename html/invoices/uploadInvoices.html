@@ -105,10 +105,17 @@
               $("#invoiceUpload").fileinput({
                   uploadUrl: uiProperties.invoiceUploadUrl, // server upload action
                   uploadAsync: true,
-                  maxFileCount: 1
+                  maxFileCount: 1,
+                  ajaxSettings: { headers: { Authorization: window.sessionStorage.token } }
               });
             $('#invoiceUpload').on('fileuploaded', function(event, data, previewId, index) {
-                window.location.replace("invoicesList.html");
+              window.location.replace("invoicesList.html");
+            });
+            $('#invoiceUpload').on('fileuploaderror', function(event, data, previewId, index) {
+              if(data.jqXHR.status == 403) {
+                console.log("File Uploaded  403 forbidden error. Redirecting to Login page!");
+                window.location.replace("../sign_in.html");
+              }              
             });
           </script>
         </div>  

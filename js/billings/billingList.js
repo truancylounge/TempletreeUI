@@ -4,6 +4,10 @@ dependentApp.factory('tokenHttpInterceptor', ['$q', '$window', '$location', func
             'request': function (config) {
               console.log('Request BillingList Interceptor: Adding token : ' + $window.sessionStorage.token);
               config.headers.Authorization = $window.sessionStorage.token;
+              if($window.sessionStorage.token === undefined) {
+                console.log("Undefined token, redirecting to login");
+                $window.location.href = '../sign_in.html';
+              }
               return config;
             },
 
@@ -17,8 +21,7 @@ dependentApp.factory('tokenHttpInterceptor', ['$q', '$window', '$location', func
                 console.log("Redirecting to login page! Invalid Token.");
                 $window.location.href = '../sign_in.html';
               }
-              return response;        
-
+              return response;  
             }
         };
 }]);
@@ -34,6 +37,8 @@ app.controller('BillingListController', ['$scope', '$http', '$modal', function($
     initialize.success(function(data) {
       console.log("Initialize GET call.");
       $scope.uiProperties = data;
+      $scope.sortType = 'invoiceName'; // set the default sort type
+      $scope.sortReverse  = false;  // set the default sort order
       $scope.retrieveBillingInvoices();
     });
 

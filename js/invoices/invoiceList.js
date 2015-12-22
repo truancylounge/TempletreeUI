@@ -4,6 +4,10 @@ dependentApp.factory('tokenHttpInterceptor', ['$q', '$window', function ($q, $wi
             'request': function (config) {
               console.log('Request Interceptor: Adding token : ' + $window.sessionStorage.token);
               config.headers.Authorization = $window.sessionStorage.token;
+              if($window.sessionStorage.token === undefined) {
+                console.log("Undefined token, redirecting to login");
+                $window.location.href = '../sign_in.html';
+              }
               return config;
             },
 
@@ -31,13 +35,15 @@ app.controller('InvoiceListController', ['$scope', '$http', '$modal', function($
     var initialize = $http.get('../../resources/config.json');
     initialize.success(function(data) {
       $scope.uiProperties = data;
+      $scope.sortType = 'invoiceName'; // set the default sort type
+      $scope.sortReverse  = false;  // set the default sort order
       $http.get($scope.uiProperties.invoiceUrl)
         .success(function(data) {
           $scope.invoices = data;
         })
         .error(function(data, status, headers, config) {
           alert( "failure message: " + JSON.stringify({data: data}));
-        });
+        });        
     });
 
     $scope.open = function (i) {

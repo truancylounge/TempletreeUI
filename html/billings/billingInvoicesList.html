@@ -107,17 +107,59 @@
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>InvoiceNumber</th>
-                    <th>TotalAmount</th>
-                    <th>Cash</th>
-                    <th>Credit</th>
-                    <th>CustomerName</th>
-                    <th>CreatedDate</th>
-                    <th>UpdatedDate</th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'invoiceName'; sortReverse = !sortReverse">
+                        InvoiceNumber
+                        <span ng-show="sortType == 'invoiceName' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'invoiceName' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'totalAmount'; sortReverse = !sortReverse">
+                        TotalAmount
+                        <span ng-show="sortType == 'totalAmount' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'totalAmount' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'cash'; sortReverse = !sortReverse">
+                        Cash
+                        <span ng-show="sortType == 'cash' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'cash' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'credit'; sortReverse = !sortReverse">
+                        Credit
+                        <span ng-show="sortType == 'credit' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'credit' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'customer.name'; sortReverse = !sortReverse">
+                        CustomerName
+                        <span ng-show="sortType == 'customer.name' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'customer.name' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'createdDate'; sortReverse = !sortReverse">
+                        CreatedDate
+                        <span ng-show="sortType == 'createdDate' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'createdDate' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'updatedDate'; sortReverse = !sortReverse">
+                        UpdatedDate
+                        <span ng-show="sortType == 'updatedDate' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'updatedDate' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
                   </tr>                  
                 </thead>
                 <tbody>                  
-                  <tr ng-repeat="i in billingInvoices | filter: searchKeyword" ng-click="open(i)" >
+                  <tr ng-repeat="i in billingInvoices | orderBy:sortType:sortReverse | filter: searchKeyword" ng-click="open(i)" >
                     <td>{{$index + 1}}</td>
                     <td>{{i.invoiceName}}</td>
                     <td>{{i.totalAmount | currency:"&#8377;"}}</td>

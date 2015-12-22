@@ -103,7 +103,15 @@
                 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu scrollable-menu" aria-labelledby="itemsMenu">
-                <li ng-repeat="item in items"><a ng-click="dropdownItemSelected(item)">{{item.itemName}}</a></li>
+                <li>
+                  <div class="input-group input-group-sm search-control"> 
+                    <span class="input-group-addon">
+                      <span class="glyphicon glyphicon-search"></span>
+                    </span>
+                    <input type="text" class="form-control" placeholder="Item Search" ng-model="searchKeyword"/>
+                  </div>
+                </li>
+                <li ng-repeat="item in items | filter: searchKeyword"><a ng-click="dropdownItemSelected(item)">{{item.itemName}}</a></li>
               </ul>
             </div>
 
@@ -200,7 +208,15 @@
                         <span class="caret"></span>
                       </button>
                       <ul class="dropdown-menu scrollable-menu" aria-labelledby="customersMenu">
-                        <li ng-repeat="customer in customers"><a ng-click="dropdownCustomerSelected(customer)">{{customer.name}}</a></li>
+                        <li>
+                          <div class="input-group input-group-sm search-control"> 
+                            <span class="input-group-addon">
+                              <span class="glyphicon glyphicon-search"></span>
+                            </span>
+                            <input type="text" class="form-control" placeholder="Customer Search" ng-model="searchKeyword"/>
+                          </div>
+                        </li>                      
+                        <li ng-repeat="customer in customers | filter: searchKeyword"><a ng-click="dropdownCustomerSelected(customer)">{{customer.name}}</a></li>
                       </ul>
                     </div>
 

@@ -4,6 +4,10 @@ dependentApp.factory('tokenHttpInterceptor', ['$q', '$window', function ($q, $wi
             'request': function (config) {
               console.log('Request Interceptor: Adding token : ' + $window.sessionStorage.token);
               config.headers.Authorization = $window.sessionStorage.token;
+              if($window.sessionStorage.token === undefined) {
+                console.log("Undefined token, redirecting to login");
+                $window.location.href = '../sign_in.html';
+              }
               return config;
             },
 
@@ -129,6 +133,8 @@ app.controller('AddBillingController', ['$scope', '$http','$modal', function($sc
 
 app.controller('SelectPaymentTypeModalController', function($scope, $modalInstance, billingInvoice) {
   $scope.billingInvoice = billingInvoice;
+  $scope.cash = 0;
+  $scope.credit = 0;
 
   // Enabling AddPaymentType modal button only if cash + credit = totalAmount
   $scope.checkSelectPaymentValidity = function() {

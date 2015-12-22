@@ -109,17 +109,59 @@
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>InvoiceName</th>
-                    <th>SubTotal</th>
-                    <th>Shipping</th>
-                    <th>Packing</th>
-                    <th>GrandTotal</th>
-                    <th>CreatedDate</th>
-                    <th>UpdatedDate</th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'invoiceName'; sortReverse = !sortReverse">
+                        InvoiceName
+                        <span ng-show="sortType == 'invoiceName' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'invoiceName' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'subTotal'; sortReverse = !sortReverse">
+                        SubTotal
+                        <span ng-show="sortType == 'subTotal' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'subTotal' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'shipping'; sortReverse = !sortReverse">
+                        Shipping
+                        <span ng-show="sortType == 'shipping' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'shipping' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'packing'; sortReverse = !sortReverse">
+                        Packing
+                        <span ng-show="sortType == 'packing' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'packing' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'grandTotal'; sortReverse = !sortReverse">
+                        GrandTotal
+                        <span ng-show="sortType == 'grandTotal' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'grandTotal' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'createdDate'; sortReverse = !sortReverse">
+                        CreatedDate
+                        <span ng-show="sortType == 'createdDate' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'createdDate' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'updatedDate'; sortReverse = !sortReverse">
+                        UpdatedDate
+                        <span ng-show="sortType == 'updatedDate' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'updatedDate' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
                   </tr>                  
                 </thead>
                 <tbody>                  
-                  <tr ng-repeat="i in invoices | filter: searchKeyword" ng-click="open(i)" >
+                  <tr ng-repeat="i in invoices | orderBy:sortType:sortReverse | filter: searchKeyword" ng-click="open(i)" >
                     <td>{{$index + 1}}</td>
                     <td>{{i.invoiceName}}</td>
                     <td>{{i.subTotal | currency:"&#8377;"}}</td>
@@ -139,6 +181,15 @@
                       <h3 class="modal-title">Invoice Items</h3>
                   </div>
                   <div class="modal-body">
+                      <div style="padding:10px 0px 10px 0px">
+                        <span class="col-md-3">
+                          <input type="text" class="form-control" ng-model="searchKeyword"/>
+                        </span>
+                        
+                        <button type="button" class="btn btn-danger" ng-click="" ng-disabled="">Revert</button>
+                        <button type="Submit" class="btn btn-primary" ng-click="" ng-disabled="">Update Invoice</button>
+                      </div> 
+
                       <div class="table-responsive">
                         <table class="table table-striped">
                           <thead>
@@ -152,7 +203,14 @@
                             </tr>                  
                           </thead>
                           <tbody>                  
-                            <tr ng-repeat="i in invoiceItems"><td>{{$index + 1}}</td><td>{{i.itemName}}</td><td>{{i.barcode}}</td><td>{{i.quantity}}</td><td>{{i.purchasePrice | currency:"&#8377;"}}</td><td>{{i.total | currency:"&#8377;"}}</td></tr>              
+                            <tr ng-repeat="i in invoiceItems | filter: searchKeyword">
+                              <td>{{$index + 1}}</td>
+                              <td>{{i.itemName}}</td>
+                              <td>{{i.barcode}}</td>
+                              <td>{{i.quantity}}</td>
+                              <td>{{i.purchasePrice | currency:"&#8377;"}}</td>
+                              <td>{{i.total | currency:"&#8377;"}}</td>
+                            </tr>              
                           </tbody>
                         </table>
                       </div> 

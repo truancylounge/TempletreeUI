@@ -4,6 +4,10 @@ dependentApp.factory('tokenHttpInterceptor', ['$q', '$window', function ($q, $wi
             'request': function (config) {
               console.log('Request Interceptor: Adding token : ' + $window.sessionStorage.token);
               config.headers.Authorization = $window.sessionStorage.token;
+              if($window.sessionStorage.token === undefined) {
+                console.log("Undefined token, redirecting to login");
+                $window.location.href = '../sign_in.html';
+              }
               return config;
             },
 
@@ -32,6 +36,8 @@ app.controller('CustomerListController', ['$scope', '$http', '$modal', function(
 
     initialize.success(function(data) {
       $scope.uiProperties = data;
+      $scope.sortType = 'name'; // set the default sort type
+      $scope.sortReverse  = false;  // set the default sort order
       $http.get($scope.uiProperties.customerlistUrl)
         .success(function(data) {
           $scope.customers = data;

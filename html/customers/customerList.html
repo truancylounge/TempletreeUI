@@ -107,17 +107,47 @@
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>CustomerName</th>
-                    <th>Email</th>
-                    <th>Telephone</th>
-                    <th>CreatedDate</th>
-                    <th>UpdatedDate</th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'name'; sortReverse = !sortReverse">
+                        CustomerName
+                        <span ng-show="sortType == 'name' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'name' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'email'; sortReverse = !sortReverse">
+                        Email
+                        <span ng-show="sortType == 'email' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'email' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'telephoneNo'; sortReverse = !sortReverse">
+                        Telephone
+                        <span ng-show="sortType == 'telephoneNo' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'telephoneNo' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>                    
+                    <th>
+                      <a href="#" ng-click="sortType = 'createdDate'; sortReverse = !sortReverse">
+                        CreatedDate
+                        <span ng-show="sortType == 'createdDate' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'createdDate' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'updatedDate'; sortReverse = !sortReverse">
+                        UpdatedDate
+                        <span ng-show="sortType == 'updatedDate' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'updatedDate' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
                     <th>Edit</th>
                     <th>Delete</th>
                   </tr>                  
                 </thead>
                 <tbody>                  
-                  <tr ng-repeat="i in customers | filter: actionFilter | filter: searchKeyword">
+                  <tr ng-repeat="i in customers | orderBy:sortType:sortReverse | filter: actionFilter | filter: searchKeyword">
                     <td>{{$index + 1}}</td>
                     <td>{{i.name}}</td>
                     <td>{{i.email}}</td>

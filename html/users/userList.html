@@ -108,10 +108,34 @@
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>UserName</th>
-                    <th>Role</th>
-                    <th>CreatedDate</th>
-                    <th>UpdatedDate</th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'username'; sortReverse = !sortReverse">
+                        UserName
+                        <span ng-show="sortType == 'username' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'username' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'role'; sortReverse = !sortReverse">
+                        Role
+                        <span ng-show="sortType == 'role' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'role' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'createdDate'; sortReverse = !sortReverse">
+                        CreatedDate
+                        <span ng-show="sortType == 'createdDate' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'createdDate' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'updatedDate'; sortReverse = !sortReverse">
+                        UpdatedDate
+                        <span ng-show="sortType == 'updatedDate' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'updatedDate' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
                     <th>Edit</th>
                     <th>Delete</th>
                   </tr>                  
