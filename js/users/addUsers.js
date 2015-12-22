@@ -29,44 +29,44 @@ dependentApp.config(['$httpProvider', function($httpProvider) {
   $httpProvider.interceptors.push('tokenHttpInterceptor');
 }]);
 
-var app = angular.module('addCustomer', ['dependency'])
-app.controller('AddCustomerController', ['$scope', '$http', function($scope, $http) {
+var app = angular.module('addUser', ['dependency'])
+app.controller('AddUserController', ['$scope', '$http', function($scope, $http) {
 
 	var initialize = $http.get('../../resources/config.json');
-  $scope.newCustomers = [];  
-
+  
   initialize.success(function(data) {
     $scope.uiProperties = data;
+      $http.get($scope.uiProperties.rolesUrl)
+        .success(function(data) {
+          $scope.roles = data;
+        })
+        .error(function(data, status, headers, config) {
+          alert( "failure message: " + JSON.stringify({data: data}));
+        });
+
   });
 
-  $scope.addCustomer = function() {
-    $scope.newCustomers.push({"name": $scope.name, "email": $scope.email, "telephoneNo": $scope.telephoneNo});
-    console.log("Adding new Customer: " + $scope.name)    
-    $scope.name = null;
-    $scope.email = null;
-    $scope.telephoneNo = null;
-  };
+  $scope.addUser = function() {
+    console.log("Adding User Credentials.");
+    var newUser = new Object();
+    newUser.username = $scope.username;
+    newUser.password = $scope.password;
+    newUser.role = $scope.selectedRole;
 
-  $scope.updateCustomers = function() {
-  	console.log("Updating Customers.");
-  	var res = $http.post($scope.uiProperties.customerlistUrl, $scope.newCustomers);
-  	res.success(function(data, status, headers, config) {
+    var res = $http.post($scope.uiProperties.loginUrl, newUser);
+    res.success(function(data, status, headers, config) {
       // On Success retrieve all customers
-      $scope.newCustomers = [];
+      console.log("NewUser successfully added.");
+      $scope.username = null;
+      $scope.password = null;
+      $scope.selectedRole = null;
     });
     res.error(function(data, status, headers, config) {
       alert( "failure message: " + JSON.stringify({data: data}));
-    });
+    });    
   };
 
-  $scope.deleteCustomer = function(i) {
-    console.log("Entering DeleteCustomer function, delete customer name : " + i.name);
-    $scope.newCustomers = $scope.newCustomers.filter(function(customer) {
-      return customer !== i;
-    });
-  };
-  $scope.checkValidity = function() {
-    return ($scope.newCustomers != undefined && 
-      $scope.newCustomers.length > 0);
-  };
+  $scope.dropdownRoleSelected = function(role) {
+    $scope.selectedRole = role;
+  };  
 }]);

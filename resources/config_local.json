@@ -3,5 +3,7 @@
 	"itemlistUrl": "http://localhost:8080/Templetree/rest/items/",
 	"invoiceUrl":"http://localhost:8080/Templetree/rest/invoices/",
 	"customerlistUrl":"http://localhost:8080/Templetree/rest/customers/",
-	"billingInvoicelistUrl":"http://localhost:8080/Templetree/rest/billingInvoices/"
+	"billingInvoicelistUrl":"http://localhost:8080/Templetree/rest/billingInvoices/",
+	"loginUrl":"http://localhost:8080/Templetree/rest/login/",
+	"rolesUrl":"http://localhost:8080/Templetree/rest/login/roles"
 }

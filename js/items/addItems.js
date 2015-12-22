@@ -1,5 +1,36 @@
-var app = angular.module('addItem', [])
-app.controller('AddItemController', ['$scope', '$http', function($scope, $http) {
+var dependentApp = angular.module('dependency',[]);
+dependentApp.factory('tokenHttpInterceptor', ['$q', '$window', function ($q, $window) {
+        return {
+            'request': function (config) {
+              console.log('Request Interceptor: Adding token : ' + $window.sessionStorage.token);
+              config.headers.Authorization = $window.sessionStorage.token;
+              if($window.sessionStorage.token === undefined) {
+                console.log("Undefined token, redirecting to login");
+                $window.location.href = '../sign_in.html';
+              }
+              return config;
+            },
+
+            'response': function (response) {              
+              console.log('Response Interceptor: New Token: ' + response.headers('X-Templteree-Auth-Token') );
+              $window.sessionStorage.token = response.headers('X-Templteree-Auth-Token') || $window.sessionStorage.token;
+              return response;
+            },
+            'responseError': function(response) {
+              if(response.status === 403) {
+                console.log("Redirecting to login page! Invalid Token.");
+                $window.location.href = '../sign_in.html';
+              }
+              return response;  
+            }
+        };
+}]);
+dependentApp.config(['$httpProvider', function($httpProvider) {
+  $httpProvider.interceptors.push('tokenHttpInterceptor');
+}]);
+
+var app = angular.module('addItem', ['dependency'])
+app.controller('AddItemController', ['$scope', '$http', '$window', function($scope, $http, $window) {
 
     var initialize = $http.get('../../resources/config.json');
     $scope.newItems = [];
@@ -31,15 +62,28 @@ app.controller('AddItemController', ['$scope', '$http', function($scope, $http) 
 
     $scope.insertItems = function() {
       console.log("Insert New Items.");
-      var res = $http.post($scope.uiProperties.itemlistUrl, $scope.newItems);
-      res.success(function(data, status, headers, config) {
-        // On Success retrieve all items
-        $scope.newItems = [];
-      });
-      res.error(function(data, status, headers, config) {
-        alert( "failure message: " + JSON.stringify({data: data}));
-      });   
+      $scope.createItems(); 
     };
+
+    /* Start of REST Call functions */
+
+    $scope.successPOSTCallback = function(response) {
+      $scope.newItems = [];
+    };
+
+    $scope.errorPOSTCallback = function(response) {
+      alert( "failure message: " + JSON.stringify({data: response.data}));
+    };     
+
+    $scope.createItems = function() {
+      $http({
+        method: 'POST',
+        url: $scope.uiProperties.itemlistUrl,
+        data: $scope.newItems
+      }).then($scope.successPOSTCallback, $scope.errorPOSTCallback);
+    };
+
+    /* End of REST Call functions */ 
 
     $scope.checkValidity = function() {
       return ($scope.newItems != undefined && 

@@ -66,6 +66,13 @@
                   <li><a href="customerList.html">CustomerList</a></li>
                 </ul>
               </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="../users/addUsers.html">AddNewUser</a></li>
+                  <li><a href="../users/userList.html">UserList</a></li>
+                </ul>                
+              </li>                                        
             </ul>           
             <ul class="nav navbar-nav navbar-right">
               <li><a href="../../dashboard.html">Dashboard</a></li>
@@ -100,23 +107,53 @@
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>CustomerName</th>
-                    <th>Email</th>
-                    <th>Telephone</th>
-                    <th>CreatedDate</th>
-                    <th>UpdatedDate</th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'name'; sortReverse = !sortReverse">
+                        CustomerName
+                        <span ng-show="sortType == 'name' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'name' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'email'; sortReverse = !sortReverse">
+                        Email
+                        <span ng-show="sortType == 'email' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'email' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'telephoneNo'; sortReverse = !sortReverse">
+                        Telephone
+                        <span ng-show="sortType == 'telephoneNo' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'telephoneNo' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>                    
+                    <th>
+                      <a href="#" ng-click="sortType = 'createdDate'; sortReverse = !sortReverse">
+                        CreatedDate
+                        <span ng-show="sortType == 'createdDate' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'createdDate' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
+                    <th>
+                      <a href="#" ng-click="sortType = 'updatedDate'; sortReverse = !sortReverse">
+                        UpdatedDate
+                        <span ng-show="sortType == 'updatedDate' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'updatedDate' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>
                     <th>Edit</th>
                     <th>Delete</th>
                   </tr>                  
                 </thead>
                 <tbody>                  
-                  <tr ng-repeat="i in customers | filter: actionFilter | filter: searchKeyword">
+                  <tr ng-repeat="i in customers | orderBy:sortType:sortReverse | filter: actionFilter | filter: searchKeyword">
                     <td>{{$index + 1}}</td>
                     <td>{{i.name}}</td>
                     <td>{{i.email}}</td>
                     <td>{{i.telephoneNo}}</td>
-                    <td>{{i.createdDate | date}}</td>
-                    <td>{{i.updatedDate | date}}</td>
+                    <td>{{i.createdDate | date:'MM/dd/yyyy HH:mm:ss'}}</td>
+                    <td>{{i.updatedDate | date:'MM/dd/yyyy HH:mm:ss'}}</td>
                     <td>
                       <p><button class="btn btn-primary btn-xs" ng-click="editCustomerOpen(i)"><span class="glyphicon glyphicon-pencil"></span></button></p>
                     </td>
