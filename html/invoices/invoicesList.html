@@ -122,7 +122,7 @@
                         <span ng-show="sortType == 'subTotal' && !sortReverse" class="dropup"><span class="caret"></span></span>
                         <span ng-show="sortType == 'subTotal' && sortReverse" class="caret"></span>
                       </a>
-                    </th>
+                    </th> 
                     <th>
                       <a href="#" ng-click="sortType = 'shipping'; sortReverse = !sortReverse">
                         Shipping
@@ -169,7 +169,7 @@
                     <td>{{i.packing | currency:"&#8377;"}}</td>
                     <td>{{i.grandTotal | currency:"&#8377;"}}</td>
                     <td>{{i.createdDate | date:'MM/dd/yyyy HH:mm:ss'}}</td>
-                    <td>{{i.updatedDate | date:'MM/dd/yyyy HH:mm:ss'}}</td>
+                    <td>{{i.updatedDate | date:'MM/dd/yyyy HH:mm:ss'}}</td>                    
                   </tr>              
                 </tbody>
               </table>
@@ -178,7 +178,7 @@
             <!-- Modal InvoiceItems start -->
             <script type="text/ng-template" id="invoiceItemsModal.html">
                   <div class="modal-header">
-                      <h3 class="modal-title">Invoice Items</h3>
+                      <h3 class="modal-title">Invoice Items: {{invoice.invoiceName}}</h3>
                   </div>
                   <div class="modal-body">
                       <div style="padding:10px 0px 10px 0px">
@@ -186,8 +186,9 @@
                           <input type="text" class="form-control" ng-model="searchKeyword"/>
                         </span>
                         
-                        <button type="button" class="btn btn-danger" ng-click="" ng-disabled="">Revert</button>
-                        <button type="Submit" class="btn btn-primary" ng-click="" ng-disabled="">Update Invoice</button>
+                        <!--button type="button" class="btn btn-danger" ng-click="revertInvoiceItems()" ng-disabled="!checkValidity()">Revert</button>
+                        <button type="Submit" class="btn btn-primary" ng-click="updateInvoice()" ng-disabled="!checkValidity()">Update Invoice</button-->
+                        <button type="Submit" class="btn btn-primary" ng-click="deleteInvoice()" ng-disabled="checkValidity()">Delete Invoice</button>
                       </div> 
 
                       <div class="table-responsive">
@@ -200,16 +201,20 @@
                               <th>Quantity</th>
                               <th>PurchasePrice</th>
                               <th>Total</th>
+                              <!--th>Delete</th-->
                             </tr>                  
                           </thead>
                           <tbody>                  
-                            <tr ng-repeat="i in invoiceItems | filter: searchKeyword">
+                            <tr ng-repeat="i in invoiceItems | filter: searchKeyword | filter: actionFilter">
                               <td>{{$index + 1}}</td>
                               <td>{{i.itemName}}</td>
                               <td>{{i.barcode}}</td>
                               <td>{{i.quantity}}</td>
                               <td>{{i.purchasePrice | currency:"&#8377;"}}</td>
                               <td>{{i.total | currency:"&#8377;"}}</td>
+                              <!--td>
+                                <p><button class="btn btn-danger btn-xs " ng-click="deleteInvoiceItem(i)"><span class="glyphicon glyphicon-trash"></span></button></p>
+                              </td-->                              
                             </tr>              
                           </tbody>
                         </table>
@@ -220,9 +225,7 @@
                       <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
                   </div>
             </script>
-          <!-- Modal InvoiceItems End -->                    
-
-
+          <!-- Modal InvoiceItems End -->
         </div>  
       </div>
   </body>

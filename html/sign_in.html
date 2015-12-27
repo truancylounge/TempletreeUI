@@ -25,8 +25,8 @@
   </head>
   <body>
     <div class="container" ng-app="login" ng-controller="LoginController">
-
-      <div class="col-md-3 col-md-offset-3 main">            
+      <div class="col-md-3 col-md-offset-3 main">
+        <div ng-show="error" class="alert alert-danger" role="alert">{{error}}</div>            
         <p class="lead">Sign In</p>
         <form role="form" name="myForm" novalidate>
           <div class="form-group">            

@@ -27,7 +27,8 @@ app.controller('LoginController', ['$scope', '$http', '$window', function($scope
         
       });
       res.error(function(data, status, headers, config) {
-        alert( "failure message: " + JSON.stringify({data: data}));
+        $scope.error =  data.code + ": " + data.message;
+        //alert( "failure message: " + JSON.stringify({data: data}));
       });    
     };
 }]);
