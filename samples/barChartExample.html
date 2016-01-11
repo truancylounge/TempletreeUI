@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Charting Example</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="../bootstrap/dist/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="../bootstrap/dist/css/bootstrap-theme.min.css">
+    <script src="../js/lib/jquery-2.1.4.min.js"></script>
+    <script src="../js/lib/angular-1.4.6.min.js"></script>
+    <script src="../js/lib/ui-bootstrap-tpls-0.13.4.min.js"></script>
+
+    
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="../bootstrap/dist/js/bootstrap.min.js"></script>  
+    <link href="../css/dashboard.css" rel="stylesheet"> 
+
+    <script src="../js/lib/highcharts/highcharts.js"></script>
+    <script src="../js/lib/highcharts/highcharts-3d.js"></script>
+    <script src="../js/lib/highcharts/modules/exporting.js"></script>
+    <script>
+
+      $(function () {
+          $('#container').highcharts({
+              chart: {
+                  type: 'column',
+                  margin: 75,
+                  options3d: {
+                      enabled: true,
+                      alpha: 10,
+                      beta: 25,
+                      depth: 70
+                  }
+              },
+              title: {
+                  text: '3D chart with null values'
+              },
+              subtitle: {
+                  text: 'Notice the difference between a 0 value and a null point'
+              },
+              plotOptions: {
+                  column: {
+                      depth: 25
+                  }
+              },
+              xAxis: {
+                  type: 'datetime',
+                  dateTimeLabelFormats: {
+                    day: '%b%e'
+                  },
+                  labels: {
+                    step: 1
+                  }
+              },
+              yAxis: {
+                  title: {
+                      text: null
+                  }
+              },
+              tooltip: {
+                valueSuffix: ' thousand'
+              },
+              series: [{
+                  name: 'Sales',
+                  data: [2, 3, 8, 4, 10, 12, 8, 6, 8, 12],
+                  pointStart: new Date().getTime(),
+                  pointInterval: 24 * 3600 * 1000 // one day
+              }]
+          });
+    
+          
+          $('#container2').highcharts({
+              chart: {
+                  type: 'column',
+                  margin: 75,
+                  options3d: {
+                      enabled: true,
+                      alpha: 10,
+                      beta: 25,
+                      depth: 70
+                  }
+              },
+              title: {
+                  text: '3D chart with null values'
+              },
+              subtitle: {
+                  text: 'Notice the difference between a 0 value and a null point'
+              },
+              plotOptions: {
+                  column: {
+                      depth: 25
+                  }
+              },
+              xAxis: {
+                  categories: Highcharts.getOptions().lang.shortMonths
+              },
+              yAxis: {
+                  title: {
+                      text: null
+                  }
+              },
+              series: [{
+                  name: 'Sales',
+                  data: [2, 3, null, 4, 0, 5, 1, 4, 6, 3]
+              }]
+          });    
+
+
+      });
+
+
+
+    </script>
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Templetree</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Items <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="html/items/addItems.html">AddItems</a></li>
+                  <li><a href="html/items/uploadItems.html">UploadNewItems</a></li>
+                  <li><a href="html/items/itemList.html">ItemList</a></li>
+                </ul>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Invoices <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="html/invoices/uploadInvoices.html">UploadNewInvoices</a></li>
+                  <li><a href="html/invoices/invoicesList.html">InvoiceList</a></li>
+                </ul>
+              </li>              
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">BillingSystem <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="html/billings/addBillingInvoice.html">NewBill</a></li>
+                  <li><a href="html/billings/billingInvoicesList.html">BillingInvoices</a></li>
+                </ul>
+              </li>              
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Customers <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="html/customers/addCustomers.html">AddCustomers</a></li>
+                  <li><a href="html/customers/customerList.html">CustomerList</a></li>
+                </ul>                
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="html/users/addUsers.html">AddNewUser</a></li>
+                  <li><a href="html/users/userList.html">UserList</a></li>
+                </ul>                
+              </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="html/sign_in.html">Login</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <div class="container-fluid">
+        <div class="row col-xs-offset-1">
+          
+  
+          <h1 class="page-header">Example Bar Charts using HighCharts</h1>
+          <div class="row placeholders">
+            <div class="col-sm-6">              
+              <div id="container" style="height: 400px"></div>
+            </div>
+            <div class="col-sm-6">
+              <h4>Graph</h4>
+              <div id="container2" style="height: 400px"></div>
+            </div>
+          </div>
+          <h2 class="sub-header">Daily Sales</h2>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Date</th>
+                  <th>TotalSale</th>
+                  <th>Cash</th>
+                  <th>Card</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>10/24/2015</td>
+                  <td>20000</td>
+                  <td>10000</td>
+                  <td>10000</td>                    
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>10/25/2015</td>
+                  <td>25000</td>
+                  <td>15000</td>
+                  <td>10000</td>                    
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>10/26/2015</td>
+                  <td>17000</td>
+                  <td>10000</td>
+                  <td>7000</td>                    
+                </tr>
+              </tbody>
+            </table>
+          </div>            
+
+      </div>
+        
+
+      </div>    
+  </body>
+</html>

@@ -1,10 +1,10 @@
 
 {
-	"itemlistUrl": "http://localhost:8080/Templetree/rest/items",
-	"invoiceUrl":"http://localhost:8080/Templetree/rest/invoices",
-	"customerlistUrl":"http://localhost:8080/Templetree/rest/customers",
-	"billingInvoicelistUrl":"http://localhost:8080/Templetree/rest/billingInvoices",
-	"loginUrl":"http://localhost:8080/Templetree/rest/login",
-	"rolesUrl":"http://localhost:8080/Templetree/rest/login/roles",
-	"authenticateUrl":"http://localhost:8080/Templetree/rest/login/authenticate"
+	"itemlistUrl": "http://ec2-54-169-254-75.ap-southeast-1.compute.amazonaws.com:8080/TempletreeSystem/rest/items/",
+	"invoiceUrl":"http://ec2-54-169-254-75.ap-southeast-1.compute.amazonaws.com:8080/TempletreeSystem/rest/invoices/",
+	"customerlistUrl":"http://ec2-54-169-254-75.ap-southeast-1.compute.amazonaws.com:8080/TempletreeSystem/rest/customers/",
+	"billingInvoicelistUrl":"http://ec2-54-169-254-75.ap-southeast-1.compute.amazonaws.com:8080/TempletreeSystem/rest/billingInvoices/",
+	"loginUrl":"http://ec2-54-169-254-75.ap-southeast-1.compute.amazonaws.com:8080/TempletreeSystem/rest/login/",
+	"rolesUrl":"http://ec2-54-169-254-75.ap-southeast-1.compute.amazonaws.com:8080/TempletreeSystem/rest/login/roles",
+	"authenticateUrl":"http://ec2-54-169-254-75.ap-southeast-1.compute.amazonaws.com:8080/TempletreeSystem/rest/login/authenticate"
 }

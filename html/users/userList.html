@@ -145,8 +145,8 @@
                     <td>{{$index + 1}}</td>
                     <td>{{i.username}}</td>
                     <td>{{i.role}}</td>
-                    <td>{{i.createdDate | date:'MM/dd/yyyy HH:mm:ss'}}</td>
-                    <td>{{i.updatedDate | date:'MM/dd/yyyy HH:mm:ss'}}</td>
+                    <td>{{i.createdDate | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                    <td>{{i.updatedDate | date:'dd/MM/yyyy HH:mm:ss'}}</td>
                     <td>
                       <p><button class="btn btn-primary btn-xs" ng-click="editUserOpen(i)"><span class="glyphicon glyphicon-pencil"></span></button></p>
                     </td>

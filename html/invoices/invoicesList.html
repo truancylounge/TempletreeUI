@@ -117,6 +117,13 @@
                       </a>
                     </th>
                     <th>
+                      <a href="#" ng-click="sortType = 'invoiceNumber'; sortReverse = !sortReverse">
+                        InvoiceNumber
+                        <span ng-show="sortType == 'invoiceNumber' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'invoiceNumber' && sortReverse" class="caret"></span>
+                      </a>
+                    </th> 
+                    <th>
                       <a href="#" ng-click="sortType = 'subTotal'; sortReverse = !sortReverse">
                         SubTotal
                         <span ng-show="sortType == 'subTotal' && !sortReverse" class="dropup"><span class="caret"></span></span>
@@ -145,6 +152,13 @@
                       </a>
                     </th>
                     <th>
+                      <a href="#" ng-click="sortType = 'invoiceDate'; sortReverse = !sortReverse">
+                        InvoiceDate
+                        <span ng-show="sortType == 'invoiceDate' && !sortReverse" class="dropup"><span class="caret"></span></span>
+                        <span ng-show="sortType == 'invoiceDate' && sortReverse" class="caret"></span>
+                      </a>
+                    </th>                    
+                    <th>
                       <a href="#" ng-click="sortType = 'createdDate'; sortReverse = !sortReverse">
                         CreatedDate
                         <span ng-show="sortType == 'createdDate' && !sortReverse" class="dropup"><span class="caret"></span></span>
@@ -164,12 +178,14 @@
                   <tr ng-repeat="i in invoices | orderBy:sortType:sortReverse | filter: searchKeyword" ng-click="open(i)" >
                     <td>{{$index + 1}}</td>
                     <td>{{i.invoiceName}}</td>
+                    <td>{{i.invoiceNumber}}</td>
                     <td>{{i.subTotal | currency:"&#8377;"}}</td>
                     <td>{{i.shipping | currency:"&#8377;"}}</td>
                     <td>{{i.packing | currency:"&#8377;"}}</td>
                     <td>{{i.grandTotal | currency:"&#8377;"}}</td>
-                    <td>{{i.createdDate | date:'MM/dd/yyyy HH:mm:ss'}}</td>
-                    <td>{{i.updatedDate | date:'MM/dd/yyyy HH:mm:ss'}}</td>                    
+                    <td>{{i.invoiceDate | date:'dd/MM/yyyy'}}</td>
+                    <td>{{i.createdDate | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                    <td>{{i.updatedDate | date:'dd/MM/yyyy HH:mm:ss'}}</td>                    
                   </tr>              
                 </tbody>
               </table>

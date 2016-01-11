@@ -109,3 +109,17 @@ body {
     max-height: 200px;
     overflow-x: hidden;
 }
+
+#container {
+    height: 400px; 
+    min-width: 0px; 
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+#container1 {
+    height: 400px; 
+    min-width: 0px; 
+    max-width: 400px;
+    margin: 0 auto;
+}
