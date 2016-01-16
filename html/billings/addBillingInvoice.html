@@ -126,7 +126,7 @@
               </div>
               <div class="form-group">
                 <label>MRP:</label>
-                <span type="text" class=" form-control" id="purchasePrice" ng-model="purchasePrice" required>{{selectedItem.purchasePrice}}</span>
+                <span type="text" class=" form-control" id="salesPrice" ng-model="salesPrice" required>{{selectedItem.salesPrice}}</span>
               </div>
               <div class="form-group">
                 <label>Quantity:</label>
@@ -134,7 +134,7 @@
               </div>
               <div class="form-group">
                 <label>Total:</label>
-                <span class="form-control" id="total">{{selectedItem.purchasePrice * quantity || 0}}</span>
+                <span class="form-control" id="total">{{selectedItem.salesPrice * quantity || 0}}</span>
               </div>
               <button type="Submit" class="btn btn-primary" ng-click="addItems()" ng-disabled="!checkMyFormValidity()">AddItem</button>
             </form>
@@ -158,7 +158,7 @@
                   </tr>                  
                 </thead>
                 <tbody>                  
-                  <tr ng-repeat="i in billingInvoice.billingInvoicesItemsList | filter: searchKeyword"><td>{{$index + 1}}</td><td>{{i.barcode}}</td><td>{{i.itemName}}</td><td>{{i.quantity}}</td><td>{{i.purchasePrice | currency:"&#8377;"}}</td><td>{{i.total | currency:"&#8377;"}}</td>
+                  <tr ng-repeat="i in billingInvoice.billingInvoicesItemsList"><td>{{$index + 1}}</td><td>{{i.barcode}}</td><td>{{i.itemName}}</td><td>{{i.quantity}}</td><td>{{i.salesPrice | currency:"&#8377;"}}</td><td>{{i.total | currency:"&#8377;"}}</td>
                   </tr>                          
                 </tbody>
               </table>

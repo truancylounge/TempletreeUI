@@ -66,8 +66,8 @@ app.controller('AddBillingController', ['$scope', '$http','$modal', function($sc
     
   $scope.addItems = function() {
     console.log("Adding new Item: " + $scope.selectedItem.itemName);
-    $scope.billingInvoice.totalAmount = $scope.billingInvoice.totalAmount + ($scope.selectedItem.purchasePrice * $scope.quantity);
-    $scope.billingInvoice.billingInvoicesItemsList.push({"barcode": $scope.selectedItem.barcode, "itemName" : $scope.selectedItem.itemName, "purchasePrice" : $scope.selectedItem.purchasePrice, "quantity" : $scope.quantity, "total" : $scope.selectedItem.purchasePrice * $scope.quantity});
+    $scope.billingInvoice.totalAmount = $scope.billingInvoice.totalAmount + ($scope.selectedItem.salesPrice * $scope.quantity);
+    $scope.billingInvoice.billingInvoicesItemsList.push({"barcode": $scope.selectedItem.barcode, "itemName" : $scope.selectedItem.itemName, "salesPrice" : $scope.selectedItem.salesPrice, "quantity" : $scope.quantity, "total" : $scope.selectedItem.salesPrice * $scope.quantity});
     $scope.quantity = 1;
     console.log("Total amount" + $scope.billingInvoice.totalAmount);
     $scope.selectedItem = null;

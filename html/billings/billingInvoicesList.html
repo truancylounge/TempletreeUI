@@ -187,12 +187,12 @@
                               <th>ItemName</th>
                               <th>Barcode</th>
                               <th>Quantity</th>
-                              <th>PurchasePrice</th>
+                              <th>MRP</th>
                               <th>Total</th>
                             </tr>                  
                           </thead>
                           <tbody>                  
-                            <tr ng-repeat="i in billingInvoicesItems"><td>{{$index + 1}}</td><td>{{i.itemName}}</td><td>{{i.barcode}}</td><td>{{i.quantity}}</td><td>{{i.purchasePrice | currency:"&#8377;"}}</td><td>{{i.total | currency:"&#8377;"}}</td></tr>              
+                            <tr ng-repeat="i in billingInvoicesItems"><td>{{$index + 1}}</td><td>{{i.itemName}}</td><td>{{i.barcode}}</td><td>{{i.quantity}}</td><td>{{i.salesPrice | currency:"&#8377;"}}</td><td>{{i.total | currency:"&#8377;"}}</td></tr>              
                           </tbody>
                         </table>
                       </div> 
