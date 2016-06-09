@@ -1,46 +1,22 @@
-var dependentApp = angular.module('dependency',[]);
-dependentApp.factory('tokenHttpInterceptor', ['$q', '$window', function ($q, $window) {
-        return {
-            'request': function (config) {
-              console.log('Request Interceptor: Adding token : ' + $window.sessionStorage.token);
-              config.headers.Authorization = $window.sessionStorage.token;
-              if($window.sessionStorage.token === undefined) {
-                console.log("Undefined token, redirecting to login");
-                $window.location.href = '../sign_in.html';
-              }
-              return config;
-            },
+templetreeApp.controller('ItemListController', ['$scope', '$http', '$uibModal', 'envService', function($scope, $http, $uibModal, envService) {
 
-            'response': function (response) {              
-              console.log('Response Interceptor: New Token: ' + response.headers('X-Templteree-Auth-Token') );
-              $window.sessionStorage.token = response.headers('X-Templteree-Auth-Token') || $window.sessionStorage.token;
-              return response;
-            },
-            'responseError': function(response) {
-              if(response.status === 403) {
-                console.log("Redirecting to login page! Invalid Token.");
-                $window.location.href = '../sign_in.html';
-              }
-              return response;  
-            }
-        };
-}]);
-dependentApp.config(['$httpProvider', function($httpProvider) {
-  $httpProvider.interceptors.push('tokenHttpInterceptor');
-}]);
+    // Debug Environment variables 
+    //$scope.environment = envService.get();
+    //console.log('Current env: ' + $scope.environment);
+    //$scope.vars = envService.read('all');
+    //console.log($scope.vars);
 
-var app = angular.module('itemList', ['ui.bootstrap', 'dependency']);
-app.controller('ItemListController', ['$scope', '$http', '$modal', '$window', function($scope, $http, $modal, $window) {
 
-    var initialize = $http.get('../../resources/config.json');
+    $scope.items = [];
+    $scope.sortType = 'barcode'; // set the default sort type
+    $scope.sortReverse  = false;  // set the default sort order
 
-    initialize.success(function(data) {
-      $scope.uiProperties = data;  
-      $scope.retriveAllItems();
-      $scope.sortType = 'barcode'; // set the default sort type
-      $scope.sortReverse  = false;  // set the default sort order
-    });
 
+    // Pagination attributes
+    $scope.currentPage = envService.read('currentPage');
+    $scope.itemsPerPage = envService.read('itemsPerPage');
+    $scope.maxSize = envService.read('maxSize');
+      
     $scope.deleteItem = function(i) {
       console.log("Entering deleteItem function.");
       $scope.items.forEach(function(item) {
@@ -77,7 +53,7 @@ app.controller('ItemListController', ['$scope', '$http', '$modal', '$window', fu
     $scope.retriveAllItems = function() {
       $http({
         method: 'GET',
-        url: $scope.uiProperties.itemlistUrl
+        url: envService.read('itemlistUrl')
       }).then($scope.successGETCallback, $scope.errorGETCallback);      
     };
 
@@ -92,7 +68,7 @@ app.controller('ItemListController', ['$scope', '$http', '$modal', '$window', fu
     $scope.saveItems = function() {
       $http({
         method: 'PUT',
-        url: $scope.uiProperties.itemlistUrl,
+        url: envService.read('itemlistUrl'),
         data: $scope.items
       }).then($scope.successPUTCallback, $scope.errorPUTCallback);
     };
@@ -116,7 +92,7 @@ app.controller('ItemListController', ['$scope', '$http', '$modal', '$window', fu
     $scope.editItemOpen = function(i) {
       console.log("Entering EditItem modal.");
 
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'editItemsModal.html',
         controller: 'EditItemModalController',
         resolve: {
@@ -129,9 +105,13 @@ app.controller('ItemListController', ['$scope', '$http', '$modal', '$window', fu
         }
       });
     };
+
+
+  $scope.retriveAllItems();
+    
 }]);
 
-app.controller('EditItemModalController', ['$scope', '$modalInstance', 'updatedItem', 'items', function ($scope, $modalInstance, updatedItem, items) {
+templetreeApp.controller('EditItemModalController', ['$scope', '$uibModalInstance', 'updatedItem', 'items', function ($scope, $uibModalInstance, updatedItem, items) {
   
   console.log("Entering EditItem modal Controller");
   $scope.itemName = updatedItem.itemName;
@@ -144,7 +124,7 @@ app.controller('EditItemModalController', ['$scope', '$modalInstance', 'updatedI
 
   
   $scope.cancel = function () {
-    $modalInstance.dismiss('cancel');
+    $uibModalInstance.dismiss('cancel');
   };
 
   $scope.editItem = function() {
@@ -164,7 +144,7 @@ app.controller('EditItemModalController', ['$scope', '$modalInstance', 'updatedI
         }
       }
 
-      $modalInstance.dismiss(updatedItem);
+      $uibModalInstance.dismiss(updatedItem);
 
   };
 }]);

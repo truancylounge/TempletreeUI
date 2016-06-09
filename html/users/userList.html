@@ -1,198 +1,100 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>TempletreeBillingSystem</title>
+<h1 class="page-header main">User Management</h1>
+<div class="col-md-12 main">            
+  <p class="lead">Listed below are all the Existing Users.</p>
 
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="../../bootstrap/dist/css/bootstrap.min.css">
-    
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="../../bootstrap/dist/css/bootstrap-theme.min.css">
-    <script src="../../js/lib/jquery-2.1.4.min.js"></script>
-    <script src="../../js/lib/angular-1.4.6.min.js"></script>
-    <script src="../../js/lib/ui-bootstrap-tpls-0.13.4.min.js"></script>
-    
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="../../bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="../../js/users/userList.js"></script>
+  <div style="padding:20px 0px 60px 0px">
+    <span class="col-md-1" style="font-weight:bold">Search</span>
+    <span class="col-md-3">
+      <input type="text" class="form-control" ng-model="searchKeyword"/>
+    </span>
+  </div>
 
-    <script src="../../resources/config.js"></script>
-    
-    <link href="../../css/dashboard.css" rel="stylesheet">  
-  </head>
-  <body> 
-      <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container-fluid">
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Templetree</a>
-          </div>
-          <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Items <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="../items/addItems.html">AddItems</a></li>
-                  <li><a href="../items/uploadItems.html">UploadNewItems</a></li>
-                  <li><a href="../items/itemList.html">ItemList</a></li>
-                </ul>
-              </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Invoices <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="../invoices/uploadInvoices.html">UploadNewInvoices</a></li>
-                  <li><a href="../invoices/invoicesList.html">InvoiceList</a></li>
-                </ul>
-              </li>  
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">BillingSystem <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="../billings/addBillingInvoice.html">NewBill</a></li>
-                  <li><a href="../billings/billingInvoicesList.html">BillingInvoices</a></li>
-                </ul>
-              </li>                                                                                                       
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Customers <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="../customers/addCustomers.html">AddCustomers</a></li>
-                  <li><a href="../customers/customerList.html">CustomerList</a></li>
-                </ul>
-              </li>  
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="addUsers.html">AddNewUser</a></li>
-                  <li><a href="userList.html">UserList</a></li>
-                </ul>                
-              </li>            
-            </ul>
-
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="../../dashboard.html">Dashboard</a></li>
-              <li><a href="#">Settings</a></li>
-              <li><a href="#">Profile</a></li>
-              <li><a href="#">Help</a></li>
-              <li><a href="../sign_in.html">Login</a></li>
-            </ul>
-            <form class="navbar-form navbar-right">
-              <input type="text" class="form-control" placeholder="Search...">
-            </form>
-          </div>
-        </div>
-      </nav>
-
-      <div class="container-fluid">
-        <div class="row" ng-app="userList" ng-controller="UserListController">
-          <h1 class="page-header main">User Management</h1>
-          <div class="col-md-12 main">            
-            <p class="lead">Listed below are all the Existing Users.</p>
-
-            <div style="padding:20px 0px 60px 0px">
-              <span class="col-md-1" style="font-weight:bold">Search</span>
-              <span class="col-md-3">
-                <input type="text" class="form-control" ng-model="searchKeyword"/>
-              </span>
-            </div>
-
-            <div class="table-responsive">
-              <table class="table table-hover">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>
-                      <a href="#" ng-click="sortType = 'username'; sortReverse = !sortReverse">
-                        UserName
-                        <span ng-show="sortType == 'username' && !sortReverse" class="dropup"><span class="caret"></span></span>
-                        <span ng-show="sortType == 'username' && sortReverse" class="caret"></span>
-                      </a>
-                    </th>
-                    <th>
-                      <a href="#" ng-click="sortType = 'role'; sortReverse = !sortReverse">
-                        Role
-                        <span ng-show="sortType == 'role' && !sortReverse" class="dropup"><span class="caret"></span></span>
-                        <span ng-show="sortType == 'role' && sortReverse" class="caret"></span>
-                      </a>
-                    </th>
-                    <th>
-                      <a href="#" ng-click="sortType = 'createdDate'; sortReverse = !sortReverse">
-                        CreatedDate
-                        <span ng-show="sortType == 'createdDate' && !sortReverse" class="dropup"><span class="caret"></span></span>
-                        <span ng-show="sortType == 'createdDate' && sortReverse" class="caret"></span>
-                      </a>
-                    </th>
-                    <th>
-                      <a href="#" ng-click="sortType = 'updatedDate'; sortReverse = !sortReverse">
-                        UpdatedDate
-                        <span ng-show="sortType == 'updatedDate' && !sortReverse" class="dropup"><span class="caret"></span></span>
-                        <span ng-show="sortType == 'updatedDate' && sortReverse" class="caret"></span>
-                      </a>
-                    </th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                  </tr>                  
-                </thead>
-                <tbody ng-repeat="i in users | filter: actionFilter | filter: searchKeyword" >                  
-                  <tr>
-                    <td>{{$index + 1}}</td>
-                    <td>{{i.username}}</td>
-                    <td>{{i.role}}</td>
-                    <td>{{i.createdDate | date:'dd/MM/yyyy HH:mm:ss'}}</td>
-                    <td>{{i.updatedDate | date:'dd/MM/yyyy HH:mm:ss'}}</td>
-                    <td>
-                      <p><button class="btn btn-primary btn-xs" ng-click="editUserOpen(i)"><span class="glyphicon glyphicon-pencil"></span></button></p>
-                    </td>
-                    <td>
-                      <p><button class="btn btn-danger btn-xs " ng-click="deleteUser(i)"><span class="glyphicon glyphicon-trash"></span></button></p>
-                    </td>
-                  </tr>              
-                </tbody>
-              </table>
-            </div>            
-          </div>
-          <!-- Modal Item Edit start -->
-          <script type="text/ng-template" id="editUsersModal.html">
-                <div class="modal-header">
-                    <h3 class="modal-title">Edit Item Details</h3>
-                </div>
-                <div class="modal-body">
-                  <form role="form" name="myForm" novalidate>
-                    <div class="form-group">
-                      <label>Username:</label>
-                      <span type="text" class=" form-control" id="username" ng-model="username" required>{{username}}</span>
-                    </div>
-                    <div class="form-group">
-                      <label>New Password:</label>
-                      <input type="password" name="password" class="form-control" id="password" ng-model="password" required>
-                    </div>
-                    <div class="form-group">
-                      <label>Role:</label>
-                      <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle" type="button" id="rolesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" required>
-                          {{selectedRole}}
-                          <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu scrollable-menu" aria-labelledby="rolesMenu">
-                          <li ng-repeat="role in roles"><a ng-click="dropdownRoleSelected(role)" required>{{role}}</a></li>
-                        </ul>
-                      </div>
-                    </div>
-                  </form>
-                </div>       
-                <div class="modal-footer">
-                  <button type="button" ng-click="cancel()">Close</button>
-                  <button type="Submit" class="btn btn-primary" ng-click="editUser()" ng-disabled="myForm.$invalid || myForm.$pristine">Save changes</button>
-                </div>           
-          </script>
-        </div>  
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>
+            <a ng-click="sortType = 'username'; sortReverse = !sortReverse">
+              UserName
+              <span ng-show="sortType == 'username' && !sortReverse" class="dropup"><span class="caret"></span></span>
+              <span ng-show="sortType == 'username' && sortReverse" class="caret"></span>
+            </a>
+          </th>
+          <th>
+            <a ng-click="sortType = 'role'; sortReverse = !sortReverse">
+              Role
+              <span ng-show="sortType == 'role' && !sortReverse" class="dropup"><span class="caret"></span></span>
+              <span ng-show="sortType == 'role' && sortReverse" class="caret"></span>
+            </a>
+          </th>
+          <th>
+            <a ng-click="sortType = 'createdDate'; sortReverse = !sortReverse">
+              CreatedDate
+              <span ng-show="sortType == 'createdDate' && !sortReverse" class="dropup"><span class="caret"></span></span>
+              <span ng-show="sortType == 'createdDate' && sortReverse" class="caret"></span>
+            </a>
+          </th>
+          <th>
+            <a ng-click="sortType = 'updatedDate'; sortReverse = !sortReverse">
+              UpdatedDate
+              <span ng-show="sortType == 'updatedDate' && !sortReverse" class="dropup"><span class="caret"></span></span>
+              <span ng-show="sortType == 'updatedDate' && sortReverse" class="caret"></span>
+            </a>
+          </th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>                  
+      </thead>
+      <tbody ng-repeat="i in users | filter: actionFilter | filter: searchKeyword" >                  
+        <tr>
+          <td>{{$index + 1}}</td>
+          <td>{{i.username}}</td>
+          <td>{{i.role}}</td>
+          <td>{{i.createdDate | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+          <td>{{i.updatedDate | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+          <td>
+            <p><button class="btn btn-primary btn-xs" ng-click="editUserOpen(i)"><span class="glyphicon glyphicon-pencil"></span></button></p>
+          </td>
+          <td>
+            <p><button class="btn btn-danger btn-xs " ng-click="deleteUser(i)"><span class="glyphicon glyphicon-trash"></span></button></p>
+          </td>
+        </tr>              
+      </tbody>
+    </table>
+  </div>            
+</div>
+<!-- Modal Item Edit start -->
+<script type="text/ng-template" id="editUsersModal.html">
+      <div class="modal-header">
+          <h3 class="modal-title">Edit Item Details</h3>
       </div>
-  </body>
-</html>
+      <div class="modal-body">
+        <form role="form" name="myForm" novalidate>
+          <div class="form-group">
+            <label>Username:</label>
+            <span type="text" class=" form-control" id="username" ng-model="username" required>{{username}}</span>
+          </div>
+          <div class="form-group">
+            <label>New Password:</label>
+            <input type="password" name="password" class="form-control" id="password" ng-model="password" required>
+          </div>
+          <div class="form-group">
+            <label>Role:</label>
+            <div class="dropdown">
+              <button class="btn btn-default dropdown-toggle" type="button" id="rolesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" required>
+                {{selectedRole}}
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu scrollable-menu" aria-labelledby="rolesMenu">
+                <li ng-repeat="role in roles"><a ng-click="dropdownRoleSelected(role)" required>{{role}}</a></li>
+              </ul>
+            </div>
+          </div>
+        </form>
+      </div>       
+      <div class="modal-footer">
+        <button type="button" ng-click="cancel()">Close</button>
+        <button type="Submit" class="btn btn-primary" ng-click="editUser()" ng-disabled="myForm.$invalid || myForm.$pristine">Save changes</button>
+      </div>           
+</script>

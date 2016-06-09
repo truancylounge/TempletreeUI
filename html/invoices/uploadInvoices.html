@@ -1,127 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>TempletreeBillingSystem</title>
 
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="../../bootstrap/dist/css/bootstrap.min.css">
-    
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="../../bootstrap/dist/css/bootstrap-theme.min.css">
-    <script src="../../js/lib/jquery-2.1.4.min.js"></script>
-    <script src="../../js/lib/angular-1.4.6.min.js"></script>
-    <script src="../../js/lib/ui-bootstrap-tpls-0.13.4.min.js"></script>
+<h2 class="page-header">Upload New Invoices Excel File.
+  <button type="button" class="btn btn-success btn-s" ng-click="sampleFileDownload()">
+    <span class="glyphicon glyphicon-download"></span> Download Template
+  </button>
+</h2>
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <h3>Select files</h3>
 
-    <!-- File upload resources-->
-    <link rel="stylesheet" href="../../css/fileinput.min.css"/>
-    <script src="../../js/lib/plugins/canvas-to-blob.min.js" type="text/javascript"></script>
-    <script src="../../js/lib/fileinput.min.js"></script>
-    
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="../../bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="../../resources/config.js"></script>
-    <link href="../../css/dashboard.css" rel="stylesheet"> 
-    <link href="../../css/fileupload.css" rel="stylesheet"> 
-  </head>
-  <body> 
-      <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container-fluid">
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Templetree</a>
+            <!--div nv-file-drop uploader="uploader">
+              <div nv-file-over uploader="uploader" class="well my-drop-zone">
+                     Drop your files here
+                </div>
+            </div-->
+
+            <!--span>Multiple</span-->      
+            <input type="file" nv-file-select uploader="uploader" multiple  />
+            <!--br/>
+      Single
+          <input type="file"  nv-file-select uploader="uploader" /-->
+    </div>
+
+    <div class="col-md-9" style="margin-bottom: 40px">
+      <h3>Upload queue</h3>
+          <p>Queue length: {{ uploader.queue.length }}</p>
+
+          <table class="table">
+              <thead>
+                  <tr>
+                      <th width="40%">Name</th>
+                      <th width="20%">Comments</th>
+                      <th ng-show="uploader.isHTML5">Size</th>
+                      <th ng-show="uploader.isHTML5">Progress</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr ng-repeat="item in uploader.queue">
+                      <td><strong>{{ item.file.name }}</strong></td>
+                      <td> <input type="text" class="form-control" name="comments" ng-model="item.comments"></td>
+                      <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                      <td ng-show="uploader.isHTML5">
+                          <div class="progress" style="margin-bottom: 0;">
+                              <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                          </div>
+                      </td>
+                      <td class="text-center">
+                          <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                          <!--span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span-->
+                          <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                      </td>
+                      <td nowrap>
+                          <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                              <span class="glyphicon glyphicon-upload"></span> Upload
+                          </button>
+                          <!--button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+                              <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                          </button-->
+                          <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                              <span class="glyphicon glyphicon-trash"></span> Remove
+                          </button>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+
+
+          <div>
+              <div>
+                  Queue progress:
+                  <div class="progress" style="">
+                      <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+                  </div>
+              </div>
+              <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">
+                  <span class="glyphicon glyphicon-upload"></span> Upload all
+              </button>
+              <!--button type="button" class="btn btn-warning btn-s" ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading">
+                  <span class="glyphicon glyphicon-ban-circle"></span> Cancel all
+              </button-->
+              <button type="button" class="btn btn-danger btn-s" ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length">
+                  <span class="glyphicon glyphicon-trash"></span> Remove all
+              </button>
           </div>
-          <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Items <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="../items/addItems.html">AddItems</a></li>
-                  <li><a href="../items/uploadItems.html">UploadNewItems</a></li>
-                  <li><a href="../items/itemList.html">ItemList</a></li>
-                </ul>
-              </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Invoices <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="uploadInvoices.html">UploadNewInvoices</a></li>
-                  <li><a href="invoicesList.html">InvoiceList</a></li>
-                </ul>
-              </li> 
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">BillingSystem <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="../billings/addBillingInvoice.html">NewBill</a></li>
-                  <li><a href="../billings/billingInvoicesList.html">BillingInvoices</a></li>
-                </ul>
-              </li>                                                       
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Customers <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="../customers/addCustomers.html">AddCustomers</a></li>
-                  <li><a href="../customers/customerList.html">CustomerList</a></li>
-                </ul>
-              </li>  
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="../users/addUsers.html">AddNewUser</a></li>
-                  <li><a href="../users/userList.html">UserList</a></li>
-                </ul>                
-              </li>                          
-            </ul>
+    </div>
+  </div>
+</div>
 
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="../../dashboard.html">Dashboard</a></li>
-              <li><a href="#">Settings</a></li>
-              <li><a href="#">Profile</a></li>
-              <li><a href="#">Help</a></li>
-              <li><a href="../sign_in.html">Login</a></li>
-            </ul>
-            <form class="navbar-form navbar-right">
-              <input type="text" class="form-control" placeholder="Search...">
-            </form>
-          </div>
-        </div>
-      </nav>
 
-      <div class="container-fluid">
-        <div class="row" ng-app="" ng-controller="">
-          <h1 class="page-header main">Invoices</h1>
-          <div class="col-md-8 main">            
-            <p class="lead">Upload New Invoices Excel File.</p>
-            <label class="control-label">Select File</label>
-            <input type="file" id="invoiceUpload" name="uploadFile" class="file" data-show-preview="false" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-          </div>
-          <script>
-              $("#invoiceUpload").fileinput({
-                  uploadUrl: uiProperties.invoiceUploadUrl, // server upload action
-                  uploadAsync: true,
-                  maxFileCount: 1,
-                  ajaxSettings: { headers: { Authorization: window.sessionStorage.token } }
-              });
-            $('#invoiceUpload').on('fileuploaded', function(event, data, previewId, index) {
-              window.location.replace("invoicesList.html");
-            });
-            $('#invoiceUpload').on('fileuploaderror', function(event, data, previewId, index) {
-              if(data.jqXHR.status == 403) {
-                console.log("File Uploaded  403 forbidden error. Redirecting to Login page!");
-                window.location.replace("../sign_in.html");
-              } else {
-                console.log(JSON.stringify(data));
-                alert("Invoice file Upload error: " + data.jqXHR.responseJSON.developerMessage);
-              }              
-            });
-          </script>
-        </div>  
-      </div>
-  </body>
-</html>
+
+

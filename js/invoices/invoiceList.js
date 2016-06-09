@@ -1,45 +1,13 @@
-var dependentApp = angular.module('dependency',[]);
-dependentApp.factory('tokenHttpInterceptor', ['$q', '$window', function ($q, $window) {
-        return {
-            'request': function (config) {
-              console.log('Request Interceptor: Adding token : ' + $window.sessionStorage.token);
-              config.headers.Authorization = $window.sessionStorage.token;
-              if($window.sessionStorage.token === undefined) {
-                console.log("Undefined token, redirecting to login");
-                $window.location.href = '../sign_in.html';
-              }
-              return config;
-            },
+templetreeApp.controller('InvoiceListController', ['$scope', '$http', '$uibModal', 'envService', function($scope, $http, $uibModal, envService) {
 
-            'response': function (response) {              
-              console.log('Response Interceptor: New Token: ' + response.headers('X-Templteree-Auth-Token') );
-              $window.sessionStorage.token = response.headers('X-Templteree-Auth-Token') || $window.sessionStorage.token;
-              return response;
-            },
-            'responseError': function(response) {
-              if(response.status === 403) {
-                console.log("Redirecting to login page! Invalid Token.");
-                $window.location.href = '../sign_in.html';
-              }
-              return response;  
-            }
-        };
-}]);
-dependentApp.config(['$httpProvider', function($httpProvider) {
-  $httpProvider.interceptors.push('tokenHttpInterceptor');
-}]);
+    $scope.sortType = 'invoiceName'; // set the default sort type
+    $scope.sortReverse  = false;  // set the default sort order
 
-var app = angular.module('invoiceList', ['ui.bootstrap', 'dependency'])
-app.controller('InvoiceListController', ['$scope', '$http', '$modal', function($scope, $http, $modal) {
-
-    var initialize = $http.get('../../resources/config.json');
-    initialize.success(function(data) {
-      $scope.uiProperties = data;
-      $scope.sortType = 'invoiceName'; // set the default sort type
-      $scope.sortReverse  = false;  // set the default sort order
-      $scope.retriveAllInvoices();      
-    });
-
+    // Pagination attributes
+    $scope.currentPage = envService.read('currentPage');
+    $scope.itemsPerPage = envService.read('itemsPerPage');
+    $scope.maxSize = envService.read('maxSize');
+    
     /* Start of REST Call functions */
 
     $scope.successGETCallback = function(response) {
@@ -53,7 +21,7 @@ app.controller('InvoiceListController', ['$scope', '$http', '$modal', function($
     $scope.retriveAllInvoices = function() {
       $http({
         method: 'GET',
-        url: $scope.uiProperties.invoiceUrl
+        url: envService.read('invoiceUrl')
       }).then($scope.successGETCallback, $scope.errorGETCallback);      
     };
     /* End of REST Call functions */    
@@ -61,7 +29,7 @@ app.controller('InvoiceListController', ['$scope', '$http', '$modal', function($
     $scope.open = function (i) {
       console.log(i.invoiceName);
 
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'invoiceItemsModal.html',
         controller: 'InvoiceModalController',
         resolve: {
@@ -69,7 +37,7 @@ app.controller('InvoiceListController', ['$scope', '$http', '$modal', function($
             return i;
           },
           invoiceUrl: function() {
-            return $scope.uiProperties.invoiceUrl;
+            return envService.read('invoiceUrl');
           },
           httpService: function() {
             return $http;
@@ -84,9 +52,11 @@ app.controller('InvoiceListController', ['$scope', '$http', '$modal', function($
           // on Modal dismiss() event
       });
     };
+
+    $scope.retriveAllInvoices();
 }]);
 
-app.controller('InvoiceModalController', function ($scope, $modalInstance, invoice, invoiceUrl, httpService) {
+templetreeApp.controller('InvoiceModalController', function ($scope, $uibModalInstance, invoice, invoiceUrl, httpService) {
 
     $scope.invoice = invoice;
     $scope.invoiceUrl = invoiceUrl;
@@ -99,7 +69,7 @@ app.controller('InvoiceModalController', function ($scope, $modalInstance, invoi
     };    
     
     $scope.ok = function () {
-      $modalInstance.close('ok');
+      $uibModalInstance.close('ok');
     };
 
     $scope.revertInvoiceItems = function() {
@@ -125,7 +95,7 @@ app.controller('InvoiceModalController', function ($scope, $modalInstance, invoi
     $scope.successDeleteCallback = function(response) {
       console.log("Success delete. Redirecting to Invoice List.")
       //$window.location.href = '../../html/invoices/invoicesList.html';
-      $modalInstance.close('ok');
+      $uibModalInstance.close('ok');
     };
 
     $scope.errorDeleteCallback = function(response) {
@@ -144,7 +114,7 @@ app.controller('InvoiceModalController', function ($scope, $modalInstance, invoi
     $scope.successPutCallback = function(response) {
       console.log("Success PUT. Redirecting to Invoice List.")
       //$window.location.href = '../../html/invoices/invoicesList.html';
-      $modalInstance.close('ok');
+      $uibModalInstance.close('ok');
     };
 
     $scope.errorPutCallback = function(response) {
@@ -174,7 +144,7 @@ app.controller('InvoiceModalController', function ($scope, $modalInstance, invoi
         url: $scope.invoiceUrl + "/" + $scope.invoice.id
       }).then($scope.successGETCallback, $scope.errorGETCallback);      
     };    
-    /* End of REST Call functions */      
+    /* End of REST Call functions */ 
 
 });
 

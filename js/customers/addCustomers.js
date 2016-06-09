@@ -1,43 +1,6 @@
-var dependentApp = angular.module('dependency',[]);
-dependentApp.factory('tokenHttpInterceptor', ['$q', '$window', function ($q, $window) {
-        return {
-            'request': function (config) {
-              console.log('Request Interceptor: Adding token : ' + $window.sessionStorage.token);
-              config.headers.Authorization = $window.sessionStorage.token;
-              if($window.sessionStorage.token === undefined) {
-                console.log("Undefined token, redirecting to login");
-                $window.location.href = '../sign_in.html';
-              }
-              return config;
-            },
+templetreeApp.controller('AddCustomerController', ['$scope', '$http', 'envService', function($scope, $http, envService) {
 
-            'response': function (response) {              
-              console.log('Response Interceptor: New Token: ' + response.headers('X-Templteree-Auth-Token') );
-              $window.sessionStorage.token = response.headers('X-Templteree-Auth-Token') || $window.sessionStorage.token;
-              return response;
-            },
-            'responseError': function(response) {
-              if(response.status === 403) {
-                console.log("Redirecting to login page! Invalid Token.");
-                $window.location.href = '../sign_in.html';
-              }
-              return response;  
-            }
-        };
-}]);
-dependentApp.config(['$httpProvider', function($httpProvider) {
-  $httpProvider.interceptors.push('tokenHttpInterceptor');
-}]);
-
-var app = angular.module('addCustomer', ['dependency'])
-app.controller('AddCustomerController', ['$scope', '$http', function($scope, $http) {
-
-	var initialize = $http.get('../../resources/config.json');
-  $scope.newCustomers = [];  
-
-  initialize.success(function(data) {
-    $scope.uiProperties = data;
-  });
+	$scope.newCustomers = [];  
 
   $scope.addCustomer = function() {
     $scope.newCustomers.push({"name": $scope.name, "email": $scope.email, "telephoneNo": $scope.telephoneNo});
@@ -49,7 +12,7 @@ app.controller('AddCustomerController', ['$scope', '$http', function($scope, $ht
 
   $scope.updateCustomers = function() {
   	console.log("Updating Customers.");
-  	var res = $http.post($scope.uiProperties.customerlistUrl, $scope.newCustomers);
+  	var res = $http.post(envService.read('customerlistUrl'), $scope.newCustomers);
   	res.success(function(data, status, headers, config) {
       // On Success retrieve all customers
       $scope.newCustomers = [];

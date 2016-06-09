@@ -1,131 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>TempletreeBillingSystem</title>
+<h1 class="page-header main">User Management</h1>
+<div class="col-md-8 main">            
+  <p class="lead">Add New User Credentials: Enter username and password</p>
 
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="../../bootstrap/dist/css/bootstrap.min.css">
-
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="../../bootstrap/dist/css/bootstrap-theme.min.css">
-    <script src="../../js/lib/jquery-2.1.4.min.js"></script>
-    <script src="../../js/lib/angular-1.4.6.min.js"></script>
-    <script src="../../js/lib/ui-bootstrap-tpls-0.13.4.min.js"></script>
-
-    
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="../../bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="../../js/users/addUsers.js"></script>
-    
-    <link href="../../css/dashboard.css" rel="stylesheet">  
-  </head>
-  <body> 
-      <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container-fluid">
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Templetree</a>
-          </div>
-          <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Items <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="../items/addItems.html">AddItems</a></li>
-                  <li><a href="../items/uploadItems.html">UploadNewItems</a></li>
-                  <li><a href="../items/itemList.html">ItemList</a></li>
-                </ul>
-              </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Invoices <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="../invoices/uploadInvoices.html">UploadNewInvoices</a></li>
-                  <li><a href="../invoices/invoicesList.html">InvoiceList</a></li>
-                </ul>
-              </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">BillingSystem <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="../billings/addBillingInvoice.html">NewBill</a></li>
-                  <li><a href="../billings/billingInvoicesList.html">BillingInvoices</a></li>
-                </ul>
-              </li>                                                       
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Customers <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="../customers/addCustomers.html">AddCustomers</a></li>
-                  <li><a href="../customers/customerList.html">CustomerList</a></li>
-                </ul>
-              </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="addUsers.html">AddNewUser</a></li>
-                  <li><a href="userList.html">UserList</a></li>
-                </ul>                
-              </li>                                        
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="../../dashboard.html">Dashboard</a></li>
-              <li><a href="#">Settings</a></li>
-              <li><a href="#">Profile</a></li>
-              <li><a href="#">Help</a></li>
-              <li><a href="../sign_in.html">Login</a></li>
-            </ul>
-            <form class="navbar-form navbar-right">
-              <input type="text" class="form-control" placeholder="Search...">
-            </form>
-          </div>
-        </div>
-      </nav>
-
-      <div class="container-fluid">
-        <div class="row" ng-app="addUser" ng-controller="AddUserController">
-          <h1 class="page-header main">User Management</h1>
-          <div class="col-md-8 main">            
-            <p class="lead">Add New User Credentials: Enter username and password</p>
-
-            <form role="form" name="myForm" class="col-md-8 main" novalidate>
-              <div class="form-group">
-                <label>UserName:</label>
-                <input type="text" name="username" class="form-control" id="username" ng-model="username" ng-minlength="3" ng-maxlength="20"required>
-                <p style="color:red" ng-show="myForm.username.$error.minlength">UserName is too short.</p>
-                <p style="color:red" ng-show="myForm.username.$error.maxlength">UserName is too long.</p>
-              </div>
-              <div class="form-group">
-                <label>Password:</label>
-                <input type="password" name="password" class="form-control" id="password" ng-model="password" required>
-              </div>
-
-              <div class="form-group">
-                <label>Role:</label>
-
-                <div class="dropdown">
-                  <button class="btn btn-default dropdown-toggle" type="button" id="rolesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" required>
-                    {{selectedRole}}
-                    <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu scrollable-menu" aria-labelledby="rolesMenu">
-                    <li ng-repeat="role in roles"><a ng-click="dropdownRoleSelected(role)" required>{{role}}</a></li>
-                  </ul>
-                </div>
-              </div>                     
-
-              <button type="Submit" class="btn btn-primary" ng-click="addUser()" ng-disabled="myForm.$invalid || !selectedRole">AddUser</button>
-            </form>
-          </div>
-      </div>
+  <form role="form" name="myForm" class="col-md-8 main" novalidate>
+    <div class="form-group">
+      <label>UserName:</label>
+      <input type="text" name="username" class="form-control" id="username" ng-model="username" ng-minlength="3" ng-maxlength="20"required>
+      <p style="color:red" ng-show="myForm.username.$error.minlength">UserName is too short.</p>
+      <p style="color:red" ng-show="myForm.username.$error.maxlength">UserName is too long.</p>
+    </div>
+    <div class="form-group">
+      <label>Password:</label>
+      <input type="password" name="password" class="form-control" id="password" ng-model="password" required>
     </div>
 
-        
-  </body>
-</html>
+    <div class="form-group">
+      <label>Role:</label>
+
+      <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="rolesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" required>
+          {{selectedRole}}
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu scrollable-menu" aria-labelledby="rolesMenu">
+          <li ng-repeat="role in roles"><a ng-click="dropdownRoleSelected(role)" required>{{role}}</a></li>
+        </ul>
+      </div>
+    </div>                     
+
+    <button type="Submit" class="btn btn-primary" ng-click="addUser()" ng-disabled="myForm.$invalid || !selectedRole">AddUser</button>
+  </form>
+</div>

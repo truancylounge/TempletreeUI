@@ -1,44 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>InventoryManagementSystem</title>
-
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="../bootstrap/dist/css/bootstrap.min.css">
-
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="../bootstrap/dist/css/bootstrap-theme.min.css">
-    <script src="../js/lib/jquery-2.1.4.min.js"></script>
-    <script src="../js/lib/angular-1.4.6.min.js"></script>
-    <script src="../js/lib/ui-bootstrap-tpls-0.13.4.min.js"></script>
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="../bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="../js/lib/jquery-2.1.4.min.js"></script>
-    <script src="../js/login.js"></script>    
-
-    <link href="../css/signin.css" rel="stylesheet">  
-  </head>
-  <body>
-    <div class="container" ng-app="login" ng-controller="LoginController">
-      <div class="col-md-3 col-md-offset-3 main">
-        <div ng-show="error" class="alert alert-danger" role="alert">{{error}}</div>            
-        <p class="lead">Sign In</p>
-        <form role="form" name="myForm" novalidate>
-          <div class="form-group">            
-            <input type="text" class="form-control" id="username" ng-model="username" placeholder="Username" required>
-          </div>
-          <div class="form-group">
-            <input type="password" class="form-control" id="password" ng-model="password" placeholder="Password" required>
-          </div>        
-          <button type="Submit" class="btn btn-primary" ng-click="authenticate()" ng-disabled="myForm.$invalid">Login</button>
-        </form>
-      </div>
-
-    </div> <!-- /container -->
-  </body>
-</html>
+<div class="col-md-3 col-md-offset-3 main">
+  <div ng-show="error" class="alert alert-danger" role="alert">{{error}}</div>            
+  <p class="lead">Sign In</p>
+  <form role="form" name="myForm" novalidate>
+    <div class="form-group">            
+      <input type="text" class="form-control" id="username" ng-model="username" placeholder="Username" required>
+    </div>
+    <div class="form-group">
+      <input type="password" class="form-control" id="password" ng-model="password" placeholder="Password" required>
+    </div>        
+    <button type="Submit" class="btn btn-primary" ng-click="authenticate()" ng-disabled="myForm.$invalid">Login</button>
+  </form>
+</div>

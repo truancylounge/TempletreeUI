@@ -1,68 +1,34 @@
-var dependentApp = angular.module('dependency',[]);
-dependentApp.factory('tokenHttpInterceptor', ['$q', '$window', function ($q, $window) {
-        return {
-            'request': function (config) {
-              console.log('Request Interceptor: Adding token : ' + $window.sessionStorage.token);
-              config.headers.Authorization = $window.sessionStorage.token;
-              if($window.sessionStorage.token === undefined) {
-                console.log("Undefined token, redirecting to login");
-                $window.location.href = '../sign_in.html';
-              }
-              return config;
-            },
+templetreeApp.controller('UserListController', ['$scope', '$http', '$uibModal', 'envService', function($scope, $http, $uibModal, envService) {
 
-            'response': function (response) {              
-              console.log('Response Interceptor: New Token: ' + response.headers('X-Templteree-Auth-Token') );
-              $window.sessionStorage.token = response.headers('X-Templteree-Auth-Token') || $window.sessionStorage.token;
-              return response;
-            },
-            'responseError': function(response) {
-              if(response.status === 403) {
-                console.log("Redirecting to login page! Invalid Token.");
-                $window.location.href = '../sign_in.html';
-              }
-              return response;  
-            }
-        };
-}]);
-dependentApp.config(['$httpProvider', function($httpProvider) {
-  $httpProvider.interceptors.push('tokenHttpInterceptor');
-}]);
+    $scope.users = [];
+    $scope.roles = [];
 
-var app = angular.module('userList', ['ui.bootstrap', 'dependency'])
-app.controller('UserListController', ['$scope', '$http', '$modal', function($scope, $http, $modal) {
+    $scope.sortType = 'username'; // set the default sort type
+    $scope.sortReverse  = false;  // set the default sort order
+    
+    $http.get(envService.read('loginUrl'))
+      .success(function(data) {
+        $scope.users = data;
+      })
+      .error(function(data, status, headers, config) {
+        alert( "failure message: " + JSON.stringify({data: data}));
+      });
 
-    var initialize = $http.get('../../resources/config.json');
-
-    initialize.success(function(data) {
-      $scope.uiProperties = data;
-      $scope.sortType = 'username'; // set the default sort type
-      $scope.sortReverse  = false;  // set the default sort order
-      $http.get($scope.uiProperties.loginUrl)
-        .success(function(data) {
-          $scope.users = data;
-        })
-        .error(function(data, status, headers, config) {
-          alert( "failure message: " + JSON.stringify({data: data}));
-        });
-      $http.get($scope.uiProperties.rolesUrl)
-        .success(function(data) {
-          $scope.roles = data;
-        })
-        .error(function(data, status, headers, config) {
-          alert( "failure message: " + JSON.stringify({data: data}));
-        });
-
-
-    });
+    $http.get(envService.read('rolesUrl'))
+      .success(function(data) {
+        $scope.roles = data;
+      })
+      .error(function(data, status, headers, config) {
+        alert( "failure message: " + JSON.stringify({data: data}));
+      });
 
     $scope.deleteUser = function(i) {
-      var deleteUrl = $scope.uiProperties.loginUrl + "/" + i.id;
+      var deleteUrl = envService.read('loginUrl') + "/" + i.id;
       console.log("Delete Url: " + deleteUrl);
       $http.delete(deleteUrl)
         .success(function(data) {
           console.log("User deleted: " + i.username);
-          $http.get($scope.uiProperties.loginUrl).success(function(data) {
+          $http.get(envService.read('loginUrl')).success(function(data) {
             $scope.users = data;
           });
         })
@@ -74,7 +40,7 @@ app.controller('UserListController', ['$scope', '$http', '$modal', function($sco
     $scope.editUserOpen = function(i) {
       console.log("Entering Edit User modal.");
 
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'editUsersModal.html',
         controller: 'EditUserModalController',
         resolve: {
@@ -88,7 +54,7 @@ app.controller('UserListController', ['$scope', '$http', '$modal', function($sco
             return $scope.roles;
           },
           loginUrl: function() {
-            return $scope.uiProperties.loginUrl;
+            return envService.read('loginUrl');
           }
 
 
@@ -97,7 +63,7 @@ app.controller('UserListController', ['$scope', '$http', '$modal', function($sco
     };
 }]);
 
-app.controller('EditUserModalController', ['$scope', '$http', '$modalInstance', 'updatedUser', 'users', 'roles', 'loginUrl', function ($scope, $http, $modalInstance, updatedUser, users, roles, loginUrl) {
+templetreeApp.controller('EditUserModalController', ['$scope', '$http', '$uibModalInstance', 'updatedUser', 'users', 'roles', 'loginUrl', function ($scope, $http, $uibModalInstance, updatedUser, users, roles, loginUrl) {
   
   console.log("Entering EditUser modal Controller");
   $scope.username = updatedUser.username;
@@ -109,7 +75,7 @@ app.controller('EditUserModalController', ['$scope', '$http', '$modalInstance', 
   };    
   
   $scope.cancel = function () {
-    $modalInstance.dismiss('cancel');
+    $uibModalInstance.dismiss('cancel');
   };
 
   $scope.editUser = function() {
@@ -128,7 +94,7 @@ app.controller('EditUserModalController', ['$scope', '$http', '$modalInstance', 
       alert( "failure message: " + JSON.stringify({data: data}));
     });  
 
-    $modalInstance.dismiss(updatedUser);
+    $uibModalInstance.dismiss(updatedUser);
   };
 }]);
 

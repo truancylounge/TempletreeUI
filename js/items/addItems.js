@@ -1,43 +1,6 @@
-var dependentApp = angular.module('dependency',[]);
-dependentApp.factory('tokenHttpInterceptor', ['$q', '$window', function ($q, $window) {
-        return {
-            'request': function (config) {
-              console.log('Request Interceptor: Adding token : ' + $window.sessionStorage.token);
-              config.headers.Authorization = $window.sessionStorage.token;
-              if($window.sessionStorage.token === undefined) {
-                console.log("Undefined token, redirecting to login");
-                $window.location.href = '../sign_in.html';
-              }
-              return config;
-            },
+templetreeApp.controller('AddItemController', ['$scope', '$http', 'envService', function($scope, $http, envService) {
 
-            'response': function (response) {              
-              console.log('Response Interceptor: New Token: ' + response.headers('X-Templteree-Auth-Token') );
-              $window.sessionStorage.token = response.headers('X-Templteree-Auth-Token') || $window.sessionStorage.token;
-              return response;
-            },
-            'responseError': function(response) {
-              if(response.status === 403) {
-                console.log("Redirecting to login page! Invalid Token.");
-                $window.location.href = '../sign_in.html';
-              }
-              return response;  
-            }
-        };
-}]);
-dependentApp.config(['$httpProvider', function($httpProvider) {
-  $httpProvider.interceptors.push('tokenHttpInterceptor');
-}]);
-
-var app = angular.module('addItem', ['dependency'])
-app.controller('AddItemController', ['$scope', '$http', '$window', function($scope, $http, $window) {
-
-    var initialize = $http.get('../../resources/config.json');
     $scope.newItems = [];
-
-    initialize.success(function(data) {
-      $scope.uiProperties = data;
-    });
 
 
     // Methods for addItems.html
@@ -78,7 +41,7 @@ app.controller('AddItemController', ['$scope', '$http', '$window', function($sco
     $scope.createItems = function() {
       $http({
         method: 'POST',
-        url: $scope.uiProperties.itemlistUrl,
+        url: envService.read('itemlistUrl'),
         data: $scope.newItems
       }).then($scope.successPOSTCallback, $scope.errorPOSTCallback);
     };

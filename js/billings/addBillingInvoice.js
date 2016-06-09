@@ -1,63 +1,27 @@
-var dependentApp = angular.module('dependency',[]);
-dependentApp.factory('tokenHttpInterceptor', ['$q', '$window', function ($q, $window) {
-        return {
-            'request': function (config) {
-              console.log('Request Interceptor: Adding token : ' + $window.sessionStorage.token);
-              config.headers.Authorization = $window.sessionStorage.token;
-              if($window.sessionStorage.token === undefined) {
-                console.log("Undefined token, redirecting to login");
-                $window.location.href = '../sign_in.html';
-              }
-              return config;
-            },
+templetreeApp.controller('AddBillingController', ['$scope', '$http','$uibModal', 'envService', function($scope, $http, $uibModal, envService) {
 
-            'response': function (response) {              
-              console.log('Response Interceptor: New Token: ' + response.headers('X-Templteree-Auth-Token') );
-              $window.sessionStorage.token = response.headers('X-Templteree-Auth-Token') || $window.sessionStorage.token;
-              return response;
-            },
-            'responseError': function(response) {
-              if(response.status === 403) {
-                console.log("Redirecting to login page! Invalid Token.");
-                $window.location.href = '../sign_in.html';
-              }
-              return response;  
-            }
-        };
-}]);
-dependentApp.config(['$httpProvider', function($httpProvider) {
-  $httpProvider.interceptors.push('tokenHttpInterceptor');
-}]);
+    $scope.items = [];
+    $scope.customers = [];
+  
+    $scope.billingInvoice = {};
+    $scope.billingInvoice.billingInvoicesItemsList = [];
+    $scope.billingInvoice.totalAmount = 0;
 
-var app = angular.module('addBilling', ['ui.bootstrap', 'dependency']);
-app.controller('AddBillingController', ['$scope', '$http','$modal', function($scope, $http, $modal) {
+    $http.get(envService.read('itemlistUrl'))
+      .success(function(data) {
+        $scope.items = data;
+      })
+      .error(function(data, status, headers, config) {
+        alert( "failure message: " + JSON.stringify({data: data}));
+      });
 
-  var initialize = $http.get('../../resources/config.json');
-
-    initialize.success(function(data) {
-      console.log("Entering Intialize");
-      $scope.uiProperties = data;
-      $scope.billingInvoice = {};
-      $scope.billingInvoice.billingInvoicesItemsList = [];
-      $scope.billingInvoice.totalAmount = 0;
-
-      $http.get($scope.uiProperties.itemlistUrl)
-        .success(function(data) {
-          $scope.items = data;
-        })
-        .error(function(data, status, headers, config) {
-          alert( "failure message: " + JSON.stringify({data: data}));
-        });
-
-      $http.get($scope.uiProperties.customerlistUrl)
-        .success(function(data) {
-          $scope.customers = data;
-        })
-        .error(function(data, status, headers, config) {
-          alert( "failure message: " + JSON.stringify({data: data}));
-        });
-
-    });
+    $http.get(envService.read('customerlistUrl'))
+      .success(function(data) {
+        $scope.customers = data;
+      })
+      .error(function(data, status, headers, config) {
+        alert( "failure message: " + JSON.stringify({data: data}));
+      });
 
     $scope.dropdownItemSelected = function(item) {
       $scope.selectedItem = item;
@@ -75,7 +39,7 @@ app.controller('AddBillingController', ['$scope', '$http','$modal', function($sc
 
     $scope.createBillingInvoice = function() {
       console.log("Creating a new Billing Invoice");
-      var res = $http.post($scope.uiProperties.billingInvoicelistUrl, $scope.billingInvoice);
+      var res = $http.post(envService.read('billingInvoicelistUrl'), $scope.billingInvoice);
       $scope.billingInvoice = {};
       $scope.billingInvoice.billingInvoicesItemsList = [];
       $scope.billingInvoice.totalAmount = 0;
@@ -102,7 +66,7 @@ app.controller('AddBillingController', ['$scope', '$http','$modal', function($sc
     $scope.selectPaymentTypeOpen = function() {
       console.log("Entering Select Payment Type Modal.");
 
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'selectPaymentTypeModal.html',
         controller: 'SelectPaymentTypeModalController',
         resolve: {
@@ -116,7 +80,7 @@ app.controller('AddBillingController', ['$scope', '$http','$modal', function($sc
     $scope.addCustomerDetailsOpen = function() {
       console.log("Entering Add Customer Details Modal.");
 
-      var modalInstance = $modal.open({
+      var modalInstance = $uibModal.open({
         templateUrl: 'addCustomerDetailsModal.html',
         controller: 'AddCustomerDetailsModalController',
         resolve: {
@@ -131,7 +95,7 @@ app.controller('AddBillingController', ['$scope', '$http','$modal', function($sc
     };
 }]);
 
-app.controller('SelectPaymentTypeModalController', function($scope, $modalInstance, billingInvoice) {
+templetreeApp.controller('SelectPaymentTypeModalController', function($scope, $uibModalInstance, billingInvoice) {
   $scope.billingInvoice = billingInvoice;
   $scope.cash = 0;
   $scope.credit = 0;
@@ -144,24 +108,24 @@ app.controller('SelectPaymentTypeModalController', function($scope, $modalInstan
 
 
   $scope.cancel = function() {
-    $modalInstance.dismiss('cancel');
+    $uibModalInstance.dismiss('cancel');
   };
 
   $scope.addPaymentType = function() {
     $scope.billingInvoice.cash = $scope.cash;
     $scope.billingInvoice.credit = $scope.credit;
 
-    $modalInstance.close($scope.totalAmount);
+    $uibModalInstance.close($scope.totalAmount);
   };
 });
 
-app.controller('AddCustomerDetailsModalController', function($scope, $modalInstance, billingInvoice, customers) {
+templetreeApp.controller('AddCustomerDetailsModalController', function($scope, $uibModalInstance, billingInvoice, customers) {
   $scope.billingInvoice = billingInvoice;
   $scope.customers = customers;
   $scope.selectedCustomer = $scope.billingInvoice.customer;
 
   $scope.cancel = function() {
-    $modalInstance.dismiss('cancel');
+    $uibModalInstance.dismiss('cancel');
   };
 
   $scope.dropdownCustomerSelected = function(customer) {
@@ -171,7 +135,7 @@ app.controller('AddCustomerDetailsModalController', function($scope, $modalInsta
   $scope.addCustomer = function() {
     console.log("Adding new Customer: " + $scope.selectedCustomer.name);
     $scope.billingInvoice.customer = $scope.selectedCustomer;
-    $modalInstance.close('save');
+    $uibModalInstance.close('save');
   };
 });
 

@@ -1,197 +1,99 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>TempletreeBillingSystem</title>
-
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="../../bootstrap/dist/css/bootstrap.min.css">
-
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="../../bootstrap/dist/css/bootstrap-theme.min.css">
-    <script src="../../js/lib/jquery-2.1.4.min.js"></script>
-    <script src="../../js/lib/angular-1.4.6.min.js"></script>
-    <script src="../../js/lib/ui-bootstrap-tpls-0.13.4.min.js"></script>
-
+<h1 class="page-header main">Customers</h1>
+<div class="col-md-12 main">            
+  <p class="lead">Listed below are all the Existing Customers</p>
+  <div style="padding:20px 0px 60px 0px">
+    <span class="col-md-1" style="font-weight:bold">Search</span>
+    <span class="col-md-3">
+      <input type="text" class="form-control" ng-model="searchKeyword"/>
+    </span>
     
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="../../bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="../../js/customers/customerList.js"></script>
-    
-    <link href="../../css/dashboard.css" rel="stylesheet">  
-  </head>
-  <body> 
-      <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container-fluid">
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Templetree</a>
-          </div>
-          <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Items <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="../items/addItems.html">AddItems</a></li>
-                  <li><a href="../items/uploadItems.html">UploadNewItems</a></li>
-                  <li><a href="../items/itemList.html">ItemList</a></li>
-                </ul>
-              </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Invoices <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="../invoices/uploadInvoices.html">UploadNewInvoices</a></li>
-                  <li><a href="../invoices/invoicesList.html">InvoiceList</a></li>
-                </ul>
-              </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">BillingSystem <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="../billings/addBillingInvoice.html">NewBill</a></li>
-                  <li><a href="../billings/billingInvoicesList.html">BillingInvoices</a></li>
-                </ul>
-              </li>                                                        
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Customers <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="addCustomers.html">AddCustomers</a></li>
-                  <li><a href="customerList.html">CustomerList</a></li>
-                </ul>
-              </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="../users/addUsers.html">AddNewUser</a></li>
-                  <li><a href="../users/userList.html">UserList</a></li>
-                </ul>                
-              </li>                                        
-            </ul>           
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href="../../dashboard.html">Dashboard</a></li>
-              <li><a href="#">Settings</a></li>
-              <li><a href="#">Profile</a></li>
-              <li><a href="#">Help</a></li>
-              <li><a href="../sign_in.html">Login</a></li>
-            </ul>
-            <form class="navbar-form navbar-right">
-              <input type="text" class="form-control" placeholder="Search...">
-            </form>
-          </div>
+    <button type="button" class="btn btn-danger" ng-click="revertCustomers()" ng-disabled="!checkValidity()">Revert</button>
+    <button type="Submit" class="btn btn-primary" ng-click="updateCustomers()" ng-disabled="!checkValidity()">Save changes</button>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>
+            <a ng-click="sortType = 'name'; sortReverse = !sortReverse">
+              CustomerName
+              <span ng-show="sortType == 'name' && !sortReverse" class="dropup"><span class="caret"></span></span>
+              <span ng-show="sortType == 'name' && sortReverse" class="caret"></span>
+            </a>
+          </th>
+          <th>
+            <a ng-click="sortType = 'email'; sortReverse = !sortReverse">
+              Email
+              <span ng-show="sortType == 'email' && !sortReverse" class="dropup"><span class="caret"></span></span>
+              <span ng-show="sortType == 'email' && sortReverse" class="caret"></span>
+            </a>
+          </th>
+          <th>
+            <a ng-click="sortType = 'telephoneNo'; sortReverse = !sortReverse">
+              Telephone
+              <span ng-show="sortType == 'telephoneNo' && !sortReverse" class="dropup"><span class="caret"></span></span>
+              <span ng-show="sortType == 'telephoneNo' && sortReverse" class="caret"></span>
+            </a>
+          </th>                    
+          <th>
+            <a ng-click="sortType = 'createdDate'; sortReverse = !sortReverse">
+              CreatedDate
+              <span ng-show="sortType == 'createdDate' && !sortReverse" class="dropup"><span class="caret"></span></span>
+              <span ng-show="sortType == 'createdDate' && sortReverse" class="caret"></span>
+            </a>
+          </th>
+          <th>
+            <a ng-click="sortType = 'updatedDate'; sortReverse = !sortReverse">
+              UpdatedDate
+              <span ng-show="sortType == 'updatedDate' && !sortReverse" class="dropup"><span class="caret"></span></span>
+              <span ng-show="sortType == 'updatedDate' && sortReverse" class="caret"></span>
+            </a>
+          </th>
+          <th>Edit</th>
+          <th>Delete</th>
+        </tr>                  
+      </thead>
+      <tbody>                  
+        <tr ng-repeat="i in customers | orderBy:sortType:sortReverse | filter: actionFilter | filter: searchKeyword">
+          <td>{{$index + 1}}</td>
+          <td>{{i.name}}</td>
+          <td>{{i.email}}</td>
+          <td>{{i.telephoneNo}}</td>
+          <td>{{i.createdDate | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+          <td>{{i.updatedDate | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+          <td>
+            <p><button class="btn btn-primary btn-xs" ng-click="editCustomerOpen(i)"><span class="glyphicon glyphicon-pencil"></span></button></p>
+          </td>
+          <td>
+            <p><button class="btn btn-danger btn-xs " ng-click="deleteCustomer(i)"><span class="glyphicon glyphicon-trash"></span></button></p>
+          </td>
+        </tr>              
+      </tbody>
+    </table>
+  </div> 
+  <!-- Modal Edit Customer start -->
+  <script type="text/ng-template" id="editCustomersModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Edit Customer Details For Customer: {{name}}</h3>
         </div>
-      </nav>
-
-      <div class="container-fluid">
-        <div class="row" ng-app="customerList" ng-controller="CustomerListController">
-          <h1 class="page-header main">Customers</h1>
-          <div class="col-md-12 main">            
-            <p class="lead">Listed below are all the Existing Customers</p>
-            <div style="padding:20px 0px 60px 0px">
-              <span class="col-md-1" style="font-weight:bold">Search</span>
-              <span class="col-md-3">
-                <input type="text" class="form-control" ng-model="searchKeyword"/>
-              </span>
-              
-              <button type="button" class="btn btn-danger" ng-click="revertCustomers()" ng-disabled="!checkValidity()">Revert</button>
-              <button type="Submit" class="btn btn-primary" ng-click="updateCustomers()" ng-disabled="!checkValidity()">Save changes</button>
+        <div class="modal-body">
+          <form role="form" name="myForm" novalidate>
+            <div class="form-group">
+              <label>Email:</label>
+              <input type="email" name="email" class="form-control" id="email" ng-model="email" required>
+              <p style="color:red" ng-show="myForm.email.$error.email">Invalid email address.</p>
             </div>
-            <div class="table-responsive">
-              <table class="table table-hover">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>
-                      <a href="#" ng-click="sortType = 'name'; sortReverse = !sortReverse">
-                        CustomerName
-                        <span ng-show="sortType == 'name' && !sortReverse" class="dropup"><span class="caret"></span></span>
-                        <span ng-show="sortType == 'name' && sortReverse" class="caret"></span>
-                      </a>
-                    </th>
-                    <th>
-                      <a href="#" ng-click="sortType = 'email'; sortReverse = !sortReverse">
-                        Email
-                        <span ng-show="sortType == 'email' && !sortReverse" class="dropup"><span class="caret"></span></span>
-                        <span ng-show="sortType == 'email' && sortReverse" class="caret"></span>
-                      </a>
-                    </th>
-                    <th>
-                      <a href="#" ng-click="sortType = 'telephoneNo'; sortReverse = !sortReverse">
-                        Telephone
-                        <span ng-show="sortType == 'telephoneNo' && !sortReverse" class="dropup"><span class="caret"></span></span>
-                        <span ng-show="sortType == 'telephoneNo' && sortReverse" class="caret"></span>
-                      </a>
-                    </th>                    
-                    <th>
-                      <a href="#" ng-click="sortType = 'createdDate'; sortReverse = !sortReverse">
-                        CreatedDate
-                        <span ng-show="sortType == 'createdDate' && !sortReverse" class="dropup"><span class="caret"></span></span>
-                        <span ng-show="sortType == 'createdDate' && sortReverse" class="caret"></span>
-                      </a>
-                    </th>
-                    <th>
-                      <a href="#" ng-click="sortType = 'updatedDate'; sortReverse = !sortReverse">
-                        UpdatedDate
-                        <span ng-show="sortType == 'updatedDate' && !sortReverse" class="dropup"><span class="caret"></span></span>
-                        <span ng-show="sortType == 'updatedDate' && sortReverse" class="caret"></span>
-                      </a>
-                    </th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                  </tr>                  
-                </thead>
-                <tbody>                  
-                  <tr ng-repeat="i in customers | orderBy:sortType:sortReverse | filter: actionFilter | filter: searchKeyword">
-                    <td>{{$index + 1}}</td>
-                    <td>{{i.name}}</td>
-                    <td>{{i.email}}</td>
-                    <td>{{i.telephoneNo}}</td>
-                    <td>{{i.createdDate | date:'dd/MM/yyyy HH:mm:ss'}}</td>
-                    <td>{{i.updatedDate | date:'dd/MM/yyyy HH:mm:ss'}}</td>
-                    <td>
-                      <p><button class="btn btn-primary btn-xs" ng-click="editCustomerOpen(i)"><span class="glyphicon glyphicon-pencil"></span></button></p>
-                    </td>
-                    <td>
-                      <p><button class="btn btn-danger btn-xs " ng-click="deleteCustomer(i)"><span class="glyphicon glyphicon-trash"></span></button></p>
-                    </td>
-                  </tr>              
-                </tbody>
-              </table>
-            </div> 
-            <!-- Modal Edit Customer start -->
-            <script type="text/ng-template" id="editCustomersModal.html">
-                  <div class="modal-header">
-                      <h3 class="modal-title">Edit Customer Details For Customer: {{name}}</h3>
-                  </div>
-                  <div class="modal-body">
-                    <form role="form" name="myForm" novalidate>
-                      <div class="form-group">
-                        <label>Email:</label>
-                        <input type="email" name="email" class="form-control" id="email" ng-model="email" required>
-                        <p style="color:red" ng-show="myForm.email.$error.email">Invalid email address.</p>
-                      </div>
-                      <div class="form-group">
-                        <label>TelephoneNumber:</label>
-                        <input type="string" name="telephoneNo" class="form-control" id="telephoneNo" ng-model="telephoneNo" required>
-                      </div>
-                    </form>
-                  </div>       
-                  <div class="modal-footer">
-                    <button type="button" ng-click="cancel()">Close</button>
-                    <button type="Submit" class="btn btn-primary" ng-click="editCustomer()" ng-disabled="myForm.$invalid || myForm.$pristine">Save changes</button>
-                  </div>           
-            </script>
-            <!-- Modal Edit Customer End -->           
-          </div>
-      </div>
-    </div>
-
-        
-  </body>
-</html>
+            <div class="form-group">
+              <label>TelephoneNumber:</label>
+              <input type="string" name="telephoneNo" class="form-control" id="telephoneNo" ng-model="telephoneNo" required>
+            </div>
+          </form>
+        </div>       
+        <div class="modal-footer">
+          <button type="button" ng-click="cancel()">Close</button>
+          <button type="Submit" class="btn btn-primary" ng-click="editCustomer()" ng-disabled="myForm.$invalid || myForm.$pristine">Save changes</button>
+        </div>           
+  </script>
+  <!-- Modal Edit Customer End -->           
+</div>
