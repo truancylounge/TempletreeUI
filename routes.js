@@ -133,23 +133,13 @@ templetreeApp.config(function(envServiceProvider) {
 
 	envServiceProvider.check();
 });
-/**
-ccwgApp.run(['$rootScope', '$location', 'authService', 'roleService', 'serviceRest', '$window', function ($rootScope, $location, authService, roleService, serviceRest, $window) {
-	authService.init();
 
+templetreeApp.run(['$rootScope', '$location', 'envService', function ($rootScope, $location, envService) {
 
-    // Retrieve role entities which can be used later to create privileges 
-    roleService.getRoles()
-      .then(
-        function(response) {
-          $rootScope.roleEntities = response.data;
-        },
-        function(response) {
-          alert( "failure message: " + JSON.stringify({data: response.data}));
-        }
-      );
+	envService.set('local');
+
 }]);
 
 
-*/
+
 
